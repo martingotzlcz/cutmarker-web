@@ -26,11 +26,11 @@
   h2{font-size:clamp(26px,3.5vw,38px);line-height:1.15;letter-spacing:-.01em;font-weight:700}
   h3{font-size:19px;font-weight:600}
   .muted{color:var(--tx2)}
-  section{padding:84px 0}
+  section{padding:84px 0;scroll-margin-top:74px}
   .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px}
 
   /* NAV */
-  nav{position:sticky;top:0;z-index:50;background:rgba(11,14,22,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(11,14,22,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
   nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
   nav .links{display:flex;gap:28px;align-items:center}
   nav .links a{color:var(--tx2);font-size:15px;font-weight:500}
@@ -97,9 +97,9 @@
   .cmp .col-c{background:rgba(107,91,255,.06)}
 
   /* pricing */
-  .prices{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:42px;max-width:760px;margin-left:auto;margin-right:auto}
-  @media(max-width:720px){.prices{grid-template-columns:1fr}}
-  .price{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:30px}
+  .prices{display:flex;gap:22px;margin:42px auto 0;max-width:760px;align-items:stretch}
+  @media(max-width:720px){.prices{flex-direction:column}}
+  .price{flex:1 1 0;min-width:0;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:30px}
   .price.feat{border:2px solid var(--pur);position:relative}
   .price .tagp{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--pur);color:#fff;font-size:12px;font-weight:600;padding:5px 14px;border-radius:99px}
   .price .amt{font-size:42px;font-weight:700;letter-spacing:-.02em;margin:6px 0}
@@ -107,7 +107,7 @@
   .price ul{list-style:none;margin:20px 0 24px}
   .price li{padding:7px 0;font-size:14.5px;color:var(--tx2);display:flex;gap:9px;align-items:flex-start}
   .price li svg{flex:none;margin-top:4px}
-  .price .btn{width:100%;text-align:center}
+  .price .btn{width:100%;text-align:center;margin-top:auto}
   .price .yr{text-align:center;color:var(--tx3);font-size:12.5px;margin-top:12px}
 
   /* faq */
