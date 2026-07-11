@@ -3,277 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cutmarker — Auto-edit your video podcast in Premiere Pro</title>
+<title>Cutmarker</title>
+<meta name="robots" content="noindex">
 <style>
-  :root{
-    --bg:#0B0E16; --bg2:#10141f; --card:#151a26; --card2:#1a2030;
-    --bd:#262d3d; --bd2:#323b4f;
-    --tx:#e8eaf0; --tx2:#9aa2b4; --tx3:#6b7280;
-    --pur:#6B5BFF; --pur2:#9b8cff; --purd:#5a4be0;
-    --grey:#9098A9; --green:#46d68a;
-  }
+  :root{--bg:#0b0b0d;--tx:#ededf0;--tx2:#9b9ba6;--tx3:#6b6b76;--pur2:#a99cff}
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
-  .btn{display:inline-block;background:var(--pur);color:#fff;font-weight:600;padding:13px 22px;border-radius:10px;font-size:15px;border:1px solid var(--pur);transition:.15s;cursor:pointer}
-  .btn:hover{background:var(--purd);border-color:var(--purd)}
-  .btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--bd2)}
-  .btn.ghost:hover{background:var(--card2)}
-  .eyebrow{color:var(--pur2);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
-  h1{font-size:clamp(34px,5vw,56px);line-height:1.08;letter-spacing:-.02em;font-weight:700}
-  h2{font-size:clamp(26px,3.5vw,38px);line-height:1.15;letter-spacing:-.01em;font-weight:700}
-  h3{font-size:19px;font-weight:600}
-  .muted{color:var(--tx2)}
-  section{padding:84px 0;scroll-margin-top:74px}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px}
-
-  /* NAV */
-  nav{position:sticky;top:0;z-index:50;background:rgba(11,14,22,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-  nav .links{display:flex;gap:28px;align-items:center}
-  nav .links a{color:var(--tx2);font-size:15px;font-weight:500}
-  nav .links a:hover{color:var(--tx)}
-  @media(max-width:720px){nav .links a:not(.btn){display:none}}
-
-  /* HERO */
-  .hero{padding:74px 0 64px;background:radial-gradient(900px 380px at 70% -10%,rgba(107,91,255,.18),transparent)}
-  .hero .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
-  @media(max-width:880px){.hero .grid{grid-template-columns:1fr;gap:36px}}
-  .badge{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--bd2);color:var(--tx2);font-size:13px;font-weight:500;padding:6px 13px;border-radius:99px;margin-bottom:20px}
-  .hero p.lead{font-size:18px;color:var(--tx2);margin:18px 0 28px;max-width:520px}
-  .cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-  .cta-note{color:var(--tx3);font-size:13px;margin-top:14px}
-
-  /* panel mock */
-  .panel{background:#2b2b2b;border:1px solid #3a3a3a;border-radius:12px;padding:14px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);font-size:12px;color:#e8e8e8}
-  .panel .ph{display:flex;align-items:center;gap:8px;border-bottom:1px solid #3a3a3a;padding-bottom:10px;margin-bottom:10px}
-  .panel .ph b{font-weight:700;font-size:14px}
-  .panel .ph .t{color:#9aa0a6;font-size:11px}
-  .panel .grp{font-size:10px;color:#9b8cff;text-transform:uppercase;letter-spacing:.05em;margin:10px 0 6px}
-  .panel .rowp{display:flex;align-items:center;gap:8px;margin:5px 0}
-  .panel .tag{color:#9b8cff;font-weight:700;width:18px}
-  .panel .sel{margin-left:auto;background:#1e1e1e;border:1px solid #4a4a4a;border-radius:4px;padding:2px 8px;font-size:11px}
-  .panel .cam{border:1px solid #3a3a3a;border-radius:6px;padding:7px;margin:5px 0}
-  .panel .ck{width:11px;height:11px;border-radius:3px;border:1px solid #6B5BFF;background:#6B5BFF;display:inline-block;vertical-align:-1px;margin-right:5px}
-  .panel .run{background:#6B5BFF;border-radius:6px;padding:9px;text-align:center;font-weight:700;margin-top:10px}
-
-  /* value bar */
-  .vbar{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:26px 0}
-  @media(max-width:720px){.vbar{grid-template-columns:repeat(2,1fr)}}
-  .vbar .v{display:flex;gap:10px;align-items:flex-start;font-size:14px}
-  .vbar .v svg{flex:none;margin-top:2px}
-  .vbar .v b{display:block;font-weight:600}
-  .vbar .v span{color:var(--tx2);font-size:13px}
-
-  /* tools */
-  .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
-  @media(max-width:880px){.tools{grid-template-columns:1fr}}
-  .tool{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:26px;position:relative}
-  .tool.hot{border-color:var(--pur)}
-  .tool .ico{width:42px;height:42px;border-radius:10px;background:rgba(107,91,255,.14);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-  .tool h3{margin-bottom:8px}
-  .tool p{color:var(--tx2);font-size:14.5px}
-  .pill{position:absolute;top:18px;right:18px;background:var(--pur);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px}
-  .thumb{margin-top:16px;height:96px;border-radius:10px;background:linear-gradient(135deg,#1c2230,#11151f);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:13px;gap:8px}
-
-  /* features grid */
-  .feats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
-  @media(max-width:840px){.feats{grid-template-columns:1fr}}
-  .feat{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px}
-  .feat svg{flex:none;margin-top:2px}
-  .feat b{display:block}
-  .feat span{color:var(--tx2);font-size:13.5px}
-  /* compare */
-  .cmp{width:100%;border-collapse:collapse;margin-top:36px;background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
-  .cmp th,.cmp td{padding:15px 18px;text-align:left;border-bottom:1px solid var(--bd);font-size:14.5px}
-  .cmp thead th{font-size:13px;color:var(--tx2);font-weight:600}
-  .cmp thead th:nth-child(2){color:var(--pur2)}
-  .cmp td:nth-child(2),.cmp td:nth-child(3),.cmp th:nth-child(2),.cmp th:nth-child(3){text-align:center;width:130px}
-  .cmp tr:last-child td{border-bottom:none}
-  .yes{color:var(--green);font-weight:700}
-  .no{color:var(--tx3)}
-  .cmp .col-c{background:rgba(107,91,255,.06)}
-
-  /* pricing */
-  .prices{display:flex;gap:22px;margin:42px auto 0;max-width:760px;align-items:stretch}
-  @media(max-width:720px){.prices{flex-direction:column}}
-  .price{flex:1 1 0;min-width:0;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:30px}
-  .price.feat{border:2px solid var(--pur);position:relative}
-  .price .tagp{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--pur);color:#fff;font-size:12px;font-weight:600;padding:5px 14px;border-radius:99px}
-  .price .amt{font-size:42px;font-weight:700;letter-spacing:-.02em;margin:6px 0}
-  .price .amt small{font-size:16px;color:var(--tx2);font-weight:500}
-  .price ul{list-style:none;margin:20px 0 24px}
-  .price li{padding:7px 0;font-size:14.5px;color:var(--tx2);display:flex;gap:9px;align-items:flex-start}
-  .price li svg{flex:none;margin-top:4px}
-  .price .btn{width:100%;text-align:center;margin-top:auto}
-  .price .yr{text-align:center;color:var(--tx3);font-size:12.5px;margin-top:12px}
-
-  /* faq */
-  .faq{max-width:760px;margin:36px auto 0}
-  details{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:4px 20px;margin-bottom:12px}
-  summary{cursor:pointer;padding:16px 0;font-weight:600;font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:center}
-  summary::-webkit-details-marker{display:none}
-  summary::after{content:"+";color:var(--pur2);font-size:22px;font-weight:400}
-  details[open] summary::after{content:"–"}
-  details p{color:var(--tx2);padding:0 0 18px;font-size:14.5px}
-
-  /* cta band */
-  .band{background:linear-gradient(135deg,rgba(107,91,255,.16),rgba(107,91,255,.04));border:1px solid var(--bd2);border-radius:22px;padding:54px 32px;text-align:center}
-  .band h2{margin-bottom:12px}
-  .band p{color:var(--tx2);margin-bottom:26px;font-size:17px}
-
-  /* footer */
-  footer{border-top:1px solid var(--bd);padding:48px 0 40px;color:var(--tx2);font-size:14px}
-  footer .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:30px}
-  footer .col h4{color:var(--tx);font-size:13px;margin-bottom:12px;font-weight:600}
-  footer .col a{display:block;color:var(--tx2);padding:4px 0}
-  footer .col a:hover{color:var(--tx)}
-  footer .bottom{border-top:1px solid var(--bd);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--tx3)}
-  .center{text-align:center}
-  .sec-head{text-align:center;max-width:620px;margin:0 auto}
-  .sec-head p{color:var(--tx2);margin-top:12px;font-size:16px}
+  body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+  svg.mark{width:66px;height:auto;margin-bottom:22px}
+  h1{font-size:26px;letter-spacing:-.02em;font-weight:700}
+  .soon{color:var(--pur2);font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:16px}
+  footer{position:fixed;bottom:0;left:0;right:0;padding:20px;color:var(--tx3);font-size:12.5px}
+  footer a{color:var(--tx3);text-decoration:none}footer a:hover{color:var(--tx2)}
 </style>
 </head>
 <body>
-
-<svg width="0" height="0" style="position:absolute"><symbol id="mark" viewBox="-58 -56 116 60"><mask id="ntch"><rect x="-58" y="-56" width="116" height="60" fill="#fff"/><circle cx="0" cy="-26" r="12" fill="#000"/></mask><g mask="url(#ntch)"><rect x="9" y="-46" width="8" height="46" rx="4" fill="#9098A9"/><rect x="-17" y="-46" width="8" height="46" rx="4" fill="#9098A9"/><rect x="22" y="-34" width="8" height="34" rx="4" fill="#9098A9"/><rect x="-30" y="-34" width="8" height="34" rx="4" fill="#9098A9"/><rect x="35" y="-22" width="8" height="22" rx="4" fill="#9098A9"/><rect x="-43" y="-22" width="8" height="22" rx="4" fill="#9098A9"/></g><rect x="-3.5" y="-22" width="7" height="22" rx="3.5" fill="#6B5BFF"/><circle cx="0" cy="-26" r="7.5" fill="#6B5BFF"/></symbol>
-<symbol id="chk" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="rgba(70,214,138,.16)"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="#46d68a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
-
-<nav><div class="wrap">
-  <a class="logo" href="#"><svg width="34" height="18"><use href="#mark"/></svg> Cutmarker</a>
-  <div class="links">
-    <a href="#features">Features</a>
-    <a href="#why">Why Cutmarker</a>
-    <a href="#pricing">Pricing</a>
-    <a href="#faq">FAQ</a>
-    <a href="roadmap.html">Roadmap</a>
-    <a class="btn" href="#pricing">Start free trial</a>
-  </div>
-</div></nav>
-
-<header class="hero"><div class="wrap"><div class="grid">
-  <div>
-    <span class="badge">● Adobe Premiere Pro plugin</span>
-    <h1>Auto-edit your video podcast — right inside Premiere.</h1>
-    <p class="lead">Cutmarker switches cameras by who's speaking, cleans mic bleed, and cuts silence — automatically. Runs 100% on your machine. No uploads, no per-minute fees, no limits.</p>
-    <div class="cta-row">
-      <a class="btn" href="#pricing">Start 30-day free trial</a>
-      <a class="btn ghost" href="#features">▶ Watch 60-sec demo</a>
-    </div>
-    <div class="cta-note">No card limits · Cancel anytime · The Autopod alternative for Premiere Pro.</div>
-  </div>
-  <div class="panel" aria-hidden="true">
-    <div class="ph"><svg width="40" height="21"><use href="#mark"/></svg><b>Cutmarker</b><span class="t">Auto Multicam</span></div>
-    <div class="grp">2 · Speakers</div>
-    <div class="rowp"><span class="tag">1.</span><span>Host</span><span class="sel">A1 ▾</span></div>
-    <div class="rowp"><span class="tag">2.</span><span>Guest</span><span class="sel">A2 ▾</span></div>
-    <div class="grp">3 · Cameras</div>
-    <div class="cam"><b>V1</b> · <span class="ck"></span>Host</div>
-    <div class="cam"><b>V2</b> · <span class="ck"></span>Guest</div>
-    <div class="cam"><b>V3</b> · <span class="ck"></span>Wide (all)</div>
-    <div class="run">▶ Run angle selection</div>
-  </div>
-</div></div></header>
-
-<div class="wrap"><div class="vbar">
-  <div class="v"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Runs locally</b><span>Nothing uploaded, ever</span></div></div>
-  <div class="v"><svg width="20" height="20"><use href="#chk"/></svg><div><b>No per-minute fees</b><span>Edit as much as you want</span></div></div>
-  <div class="v"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Editable keyframes</b><span>You stay in control</span></div></div>
-  <div class="v"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Backs up first</b><span>Non-destructive, always</span></div></div>
-</div></div>
-
-<section id="features"><div class="wrap">
-  <div class="sec-head">
-    <span class="eyebrow">Three tools, one plugin</span>
-    <h2>Stop riding the fader. Let Cutmarker do the grunt work.</h2>
-    <p>Built by an editor, for editors — to automate the parts you hate, while you keep full control.</p>
-  </div>
-  <div class="tools">
-    <div class="tool">
-      <div class="ico"><svg width="22" height="12"><use href="#mark"/></svg></div>
-      <h3>Auto Multicam</h3>
-      <p>Switches angles by who's speaking — with smart timing that won't flicker on every "mhm". Goes wide when people talk over each other, and saves your setup as presets.</p>
-      <div class="thumb">▶ Demo</div>
-    </div>
-    <div class="tool hot">
-      <span class="pill">Our edge</span>
-      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9b8cff" stroke-width="2"><path d="M3 12h3l3-8 4 16 3-8h5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <h3>Mic Bleed</h3>
-      <p>Ducks cross-talk between mics automatically — and writes real, <b style="color:#e8eaf0">editable keyframes you control</b>. Not a black-box VST. Tweak any moment by hand.</p>
-      <div class="thumb">▶ Demo</div>
-    </div>
-    <div class="tool">
-      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9b8cff" stroke-width="2"><path d="M6 4v16M18 4v16M9 9l6 6M15 9l-6 6" stroke-linecap="round"/></svg></div>
-      <h3>Silence Cut</h3>
-      <p>Finds dead air on your audio track and marks or cuts it — your call (mark, ripple, or disable). Always backs up your sequence first.</p>
-      <div class="thumb">▶ Demo</div>
-    </div>
-  </div>
-</div></section>
-
-<section id="why" style="background:var(--bg2)"><div class="wrap">
-  <div class="sec-head">
-    <span class="eyebrow">The Autopod alternative</span>
-    <h2>Everything you need to ship a clean podcast.</h2>
-  </div>
-  <div class="feats">
-    <div class="feat"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Auto multicam</b><span>Switches camera angles based on who's on the mic.</span></div></div>
-    <div class="feat"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Mic bleed cleanup</b><span>Ducks cross-talk and writes editable keyframes you control.</span></div></div>
-    <div class="feat"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Silence cut</b><span>Mark, ripple, or disable dead air. Backs up first.</span></div></div>
-    <div class="feat"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Smart timing</b><span>Min shot length + anti-flicker — no cut on every "mhm".</span></div></div>
-    <div class="feat"><svg width="20" height="20"><use href="#chk"/></svg><div><b>100% local</b><span>No uploads, no per-minute fees, no limits.</span></div></div>
-    <div class="feat"><svg width="20" height="20"><use href="#chk"/></svg><div><b>Presets</b><span>Save your setup and reuse it on every episode.</span></div></div>
-  </div>
-</div></section>
-
-<section id="pricing"><div class="wrap">
-  <div class="sec-head">
-    <span class="eyebrow">Simple pricing</span>
-    <h2>One plan. Everything included.</h2>
-    <p>30-day free trial. Cancel anytime. No monthly limits.</p>
-  </div>
-  <div class="prices" style="max-width:440px">
-    <div class="price feat">
-      <span class="tagp">Everything included</span>
-      <h3>Cutmarker</h3>
-      <div class="muted" style="font-size:14px">All three tools. One simple price.</div>
-      <div class="amt">$19<small> /mo</small></div>
-      <ul>
-        <li><svg width="18" height="18"><use href="#chk"/></svg>Auto Multicam — switch by who's speaking</li>
-        <li><svg width="18" height="18"><use href="#chk"/></svg><b style="color:#e8eaf0">Mic Bleed</b> — editable keyframes you control</li>
-        <li><svg width="18" height="18"><use href="#chk"/></svg>Silence Cut — mark, cut, or disable</li>
-        <li><svg width="18" height="18"><use href="#chk"/></svg>Runs 100% locally · backs up first · no limits</li>
-      </ul>
-      <a class="btn" href="#">Start 30-day free trial</a>
-      <div class="yr">or $150/year — 2 months free</div>
-    </div>
-  </div>
-</div></section>
-
-<section id="faq"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">FAQ</span><h2>Good questions.</h2></div>
-  <div class="faq">
-    <details open><summary>Which Premiere version do I need?</summary><p>Adobe Premiere Pro 2023 or newer. Cutmarker installs as a panel under Window → Extensions.</p></details>
-    <details><summary>Do I need a mic for each speaker?</summary><p>For multicam, yes — Cutmarker decides who's on camera by listening to each person's mic, so the cleanest result comes from one mic per speaker. (Silence Cut works on a single track too.)</p></details>
-    <details><summary>Is my footage uploaded to the cloud?</summary><p>Never. Everything runs locally on your machine. No uploads, no per-minute fees, no monthly processing limits.</p></details>
-    <details><summary>What makes Mic Bleed different from a VST?</summary><p>A VST is a black box you can't touch. Mic Bleed writes real volume keyframes straight into your timeline, so you keep full control and can fine-tune any moment by hand.</p></details>
-    <details><summary>Can I cancel anytime?</summary><p>Yes — 30-day free trial, cancel anytime, no questions asked.</p></details>
-  </div>
-</div></section>
-
-<section><div class="wrap"><div class="band">
-  <h2>Ship your podcast with peace of mind.</h2>
-  <p>Let Cutmarker find every cut, every silence, every bit of bleed — so you don't have to.</p>
-  <a class="btn" href="#pricing">Start your 30-day free trial</a>
-</div></div></section>
-
-<footer><div class="wrap">
-  <div class="top">
-    <div style="max-width:280px">
-      <a class="logo" href="#" style="margin-bottom:10px"><svg width="34" height="18"><use href="#mark"/></svg> Cutmarker</a>
-      <p style="font-size:13.5px">Made for editors, by editors. Automate the grunt work, keep the control.</p>
-    </div>
-    <div class="col"><h4>Product</h4><a href="#features">Features</a><a href="#why">Why Cutmarker</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
-    <div class="col"><h4>Company</h4><a href="#">Affiliate program</a><a href="#">Discord 
+  <svg class="mark" viewBox="-43 -46 86 46" fill="none" role="img" aria-label="Cutmarker">
+    <mask id="ntch"><rect x="-58" y="-56" width="116" height="60" fill="#fff"/><circle cx="0" cy="-26" r="12" fill="#000"/></mask>
+    <g mask="url(#ntch)">
+      <rect x="9" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/><rect x="-17" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/>
+      <rect x="22" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/><rect x="-30" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/>
+      <rect x="35" y="-22" width="8" height="22" rx="4" fill="#6E7591"/><rect x="-43" y="-22" width="8" height="22" rx="4" fill="#6E7591"/>
+    </g>
+    <rect x="-3.5" y="-22" width="7" height="22" rx="3.5" fill="#6B5BFF"/><circle cx="0" cy="-26" r="7.5" fill="#6B5BFF"/>
+  </svg>
+  <h1>Cutmarker</h1>
+  <div class="soon">Coming soon</div>
+  <footer><a href="/legal.html">Terms &amp; Privacy</a> &nbsp;&middot;&nbsp; support@cutmarker.com</footer>
+</body>
+</html>
