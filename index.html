@@ -10,8 +10,7 @@
 <meta property="og:title" content="Cutmarker · Auto-edit your video podcast in Premiere Pro">
 <meta property="og:description" content="Auto multicam, mic bleed, silence cut, final check and time insights, all inside Premiere Pro. A local Autopod alternative.">
 <meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/fonts.css">
 <style>
   :root{
     --bg:#0C0C11; --surface:#15151B; --surface2:#1B1B23;
@@ -101,6 +100,8 @@
   .wl-input{flex:1 1 240px;background:var(--surface);border:1px solid var(--bd2);color:var(--tx);padding:11px 15px;border-radius:10px;font-size:15px;font-family:inherit}
   .wl-input::placeholder{color:var(--tx3)}
   .wl-input:focus{outline:none;border-color:var(--pur2);box-shadow:0 0 0 3px rgba(107,91,255,.18)}
+  .wl-input.flash{border-color:var(--pur2);animation:wlpulse 1s cubic-bezier(.2,.7,.3,1) 2}
+  @keyframes wlpulse{0%,100%{box-shadow:0 0 0 3px rgba(107,91,255,.22),0 0 16px rgba(107,91,255,.25)}50%{box-shadow:0 0 0 5px rgba(107,91,255,.34),0 0 30px rgba(107,91,255,.5)}}
   .wl .btn{flex:none}
   .wl-msg{min-height:18px;margin-top:10px;font-size:13.5px;color:var(--signal);text-align:center}
   .wl-msg.err{color:#ff7a7a}
@@ -109,7 +110,7 @@
   .wl-done{max-width:470px;margin:0 auto;background:rgba(139,233,176,.08);border:1px solid rgba(139,233,176,.4);border-radius:12px;padding:14px 18px;color:var(--tx);font-size:15px;display:flex;align-items:center;gap:10px;justify-content:center;animation:fadeup .5s cubic-bezier(.2,.7,.3,1) both}
   .wl-done .ck{color:var(--signal);font-weight:800;font-size:18px;flex:none}
   /* hero video */
-  .herovid{max-width:760px;margin:44px auto 0;border:1px solid var(--bd2);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:var(--hi),var(--sh2),0 0 46px -14px rgba(107,91,255,.35);line-height:0}
+  .herovid{max-width:760px;margin:18px auto 0;border:1px solid var(--bd2);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:var(--hi),var(--sh2),0 0 46px -14px rgba(107,91,255,.35);line-height:0}
   .herovid video{width:100%;height:auto;display:block}
 
   .head{max-width:none;margin-bottom:32px;position:relative}
@@ -213,8 +214,10 @@
   .tool{transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease,opacity .7s ease}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
+<!-- Affiliate tracking je dočasně vypnutý (program zatím není live). Při spuštění affiliate programu odkomentovat + nasadit cookie lištu (viz cookie-consent-snippet.html).
 <script>window.lemonSqueezyAffiliateConfig = { store: "cutmarker" };</script>
 <script src="https://lmsqueezy.com/affiliate.js" defer></script>
+-->
 </head>
 <body>
 <div id="scrub"><span class="pf"></span><span class="ph"></span><span class="sweep"></span></div>
@@ -236,8 +239,8 @@
 </div></nav>
 
 <header class="hero"><div class="wrap">
-  <h1 data-i18n="heroH1">Auto-edit your video podcast.<br>Multicam done in seconds.</h1>
-  <p class="lead" data-i18n="heroLead">Switch cameras by who's speaking, cut the silence, and clean up the bleed between your mics. All inside Premiere Pro, fully on your machine. No uploads, no minute limits.</p>
+  <h1 data-i18n="heroH1">Auto-edit your video podcast</h1>
+  <p class="lead" data-i18n="heroLead">Switch cameras by who's speaking, cut the silence, and clean up the bleed between your mics. Inside Premiere Pro, fully on your machine. No uploads, no AI minute limits.</p>
   <form id="waitlist" class="wl" novalidate>
     <input class="wl-input" type="email" name="email" required autocomplete="email" placeholder="you@email.com" aria-label="Email">
     <button class="btn" type="submit">Join the waiting list</button>
@@ -245,20 +248,22 @@
   <div class="wl-priv" id="wlPriv">We only email you about the launch. No spam. <a href="/legal#privacy">Privacy</a>.</div>
   <div class="wl-msg" id="wlMsg" role="status" aria-live="polite"></div>
   <div class="wl-done" id="wlDone" style="display:none"><span class="ck">&#10003;</span><span id="wlDoneTxt">You're on the list. We'll be in touch before launch.</span></div>
+  <!-- Odznaky nad videem dočasně skryté (zapnout = odkomentovat)
   <div class="hero-badges">
     <span data-i18n="bdg1">Runs in Premiere Pro</span>
     <span data-i18n="bdg2">Nothing leaves your computer</span>
     <span data-i18n="bdg3">No AI minute limits</span>
     <span data-i18n="bdg4">14-day free trial</span>
   </div>
+  -->
   <div class="herovid">
     <video src="assets/Multicam_hero_web.mp4" autoplay muted loop playsinline preload="metadata"></video>
   </div>
-  <p style="text-align:center;margin-top:14px;color:var(--pur2);font-size:12px;font-family:'JetBrains Mono',ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase">Auto Multicam</p>
+  <p style="text-align:center;margin-top:14px;color:var(--pur2);font-size:12px;font-family:'JetBrains Mono',ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase">Multicam done in seconds</p>
 </div></header>
 
 <section id="tools"><div class="wrap">
-  <div class="head" style="margin:0 0 34px"><span class="kicker" data-i18n="toolsKicker">The toolkit</span><h2 data-i18n="toolsH2">All tools, one plugin.</h2></div>
+  <div class="head" style="margin:0 0 34px"><span class="kicker" data-i18n="toolsKicker">The toolkit</span><h2 data-i18n="toolsH2">All tools, one plugin</h2></div>
   <div class="tools">
     <div class="tool">
       <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="12" height="10" rx="2.6" stroke="#9098A9" stroke-width="2"/><rect x="9" y="9" width="12" height="10" rx="2.6" fill="#6B5BFF"/></svg></div></div>
@@ -281,15 +286,17 @@
     <div class="tool edge">
       <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.3" stroke="#9098A9" stroke-width="2"/><path d="M12 7.3 V12 L15.2 14" stroke="#6B5BFF" stroke-width="2.2" fill="none"/></svg></div><span class="edgelabel">Beta</span></div>
       <h3>Insights</h3>
-      <p data-i18n="tInsightsDesc">An orientational look at where your editing time goes: editing, watching and breaks, logged per work session with real timestamps. Export a CSV. Runs locally.</p>
+      <p data-i18n="tInsightsDesc">An orientational look at where your editing time goes: Editing, watching and breaks, logged per work session with real timestamps. Export a CSV. Runs locally.</p>
       <div class="plat"><span class="p on">Premiere Pro</span></div>
     </div>
+    <!-- Final Check karta dočasně skrytá (zapnout = odkomentovat)
     <div class="tool soon">
       <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 L10 17.5 L19.5 7" stroke="#6B5BFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="edgelabel" data-i18n="edgeSoon">Coming soon</span></div>
       <h3>Final Check</h3>
-      <p data-i18n="tFinalDesc">Coming next: it will scan your finished edit for clipping, dead air, black gaps and stray micro-cuts, so you can export with confidence.</p>
+      <p data-i18n="tFinalDesc">Coming next, it will scan your finished edit for clipping, dead air, black gaps and stray micro-cuts, so you can export with confidence.</p>
       <div class="plat"><span class="p off" data-i18n="soonLabel">In development</span></div>
     </div>
+    -->
     <a class="tool rm" href="/roadmap" style="text-decoration:none">
       <div class="top"><div class="ico" style="background:rgba(255,255,255,.05)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b6b76" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></div><span class="edgelabel" style="color:var(--tx3)" data-i18n="edgeRoadmap">Roadmap</span></div>
       <h3 style="color:var(--tx2)" data-i18n="roadmapH3">More on the way</h3>
@@ -301,7 +308,7 @@
 
 <div class="line"></div>
 <section id="pricing"><div class="wrap">
-  <div class="head" style="margin:0 0 32px"><span class="kicker" data-i18n="priceKicker">Pricing</span><h2 data-i18n="priceH2">One simple price.</h2></div>
+  <div class="head" style="margin:0 0 32px"><span class="kicker" data-i18n="priceKicker">Pricing</span><h2 data-i18n="priceH2">One simple price</h2></div>
   <div class="prices">
   <div class="price">
     <h3>Cutmarker</h3>
@@ -310,10 +317,10 @@
     <div class="pt" style="color:var(--signal);margin-top:6px">Founding price. It becomes $24.99 later.</div>
     <div class="pt" style="margin-top:4px;font-size:12.5px">Our thank-you to the first users who join early and help shape Cutmarker with their feedback.</div>
     <ul>
-      <li><span class="tick">✓</span><span data-i18n="pl1">Auto Multicam: switches by who is speaking</span></li>
-      <li><span class="tick">✓</span><span data-i18n="pl2">Mic Bleed: editable keyframes you control</span></li>
-      <li><span class="tick">✓</span><span data-i18n="pl3">Silence Cut: mark, cut, or disable</span></li>
-      <li><span class="tick">✓</span><span data-i18n="pl5">Insights (beta): see where your editing time goes</span></li>
+      <li><span class="tick">✓</span><span data-i18n="pl1">Auto Multicam: Switches by who is speaking</span></li>
+      <li><span class="tick">✓</span><span data-i18n="pl2">Mic Bleed: Editable keyframes you control</span></li>
+      <li><span class="tick">✓</span><span data-i18n="pl3">Silence Cut: Mark, cut, or disable</span></li>
+      <li><span class="tick">✓</span><span data-i18n="pl5">Insights (beta): See where your editing time goes</span></li>
       <li class="note" style="margin-top:10px"><span data-i18n="pn1">Runs 100% locally, no uploads, no limits</span></li>
       <li class="note"><span data-i18n="pn5">No per-minute fees, no AI credits, unlimited footage</span></li>
       <li class="note"><span data-i18n="pn3">Every new tool and update included as we ship them</span></li>
@@ -332,7 +339,7 @@
   <div class="afftwo">
     <div class="aff">
       <div>
-        <h3 data-i18n="affH3">Affiliate program.</h3>
+        <h3 data-i18n="affH3">Affiliate program</h3>
         <p data-i18n="affDesc">Refer Cutmarker and earn 10% on every payment your referrals make, for as long as they stay subscribed.</p>
       </div>
       <a class="btn ghost" href="#waitlist" data-i18n="affBtn">Join the program</a>
@@ -351,7 +358,7 @@
 
 <div class="line"></div>
 <section id="faq"><div class="wrap">
-  <div class="head"><span class="kicker" data-i18n="faqKicker">FAQ</span><h2 data-i18n="faqH2">Good questions.</h2></div>
+  <div class="head"><span class="kicker" data-i18n="faqKicker">FAQ</span><h2 data-i18n="faqH2">Good questions</h2></div>
   <div class="faq">
     <details open><summary data-i18n="q1">Which Premiere version do I need?</summary><p data-i18n="a1">Adobe Premiere Pro 2020 or newer. It installs as a panel under Window, then Extensions.</p></details>
     <details><summary data-i18n="q2">Does it work in DaVinci Resolve?</summary><p data-i18n="a2">Premiere Pro today. DaVinci support is on the roadmap for Auto Multicam, Silence Cut, and Final Check. Mic Bleed stays Premiere only, because DaVinci handles track audio differently.</p></details>
@@ -359,7 +366,7 @@
     <details><summary data-i18n="q4">Is my footage uploaded anywhere?</summary><p data-i18n="a4">Never. Your media and editing stay on your computer. No uploads, no per-minute fees, no monthly limits.</p></details>
     <details><summary data-i18n="q9">Do I need an internet connection?</summary><p data-i18n="a9">Your media and the editing stay on your computer, nothing is uploaded. You do need a connection to activate and verify your license, the same as most paid editing software. The editing itself runs locally.</p></details>
     <details><summary data-i18n="q8">Do I need Mic Bleed if my mixer already has automix?</summary><p data-i18n="a8">Even when your mixer or recorder reduces bleed while you record, that pass is not always perfect. You can still run Mic Bleed in post to fine-tune it further, with keyframes you control, whenever you want a cleaner result.</p></details>
-    <details><summary data-i18n="q5">What does Insights actually track?</summary><p data-i18n="a5">Only your work inside Premiere: editing time and actions on the timeline, as an orientational guide. It does not watch anything you do outside the app, and nothing leaves your computer.</p></details>
+    <details><summary data-i18n="q5">What does Insights actually track?</summary><p data-i18n="a5">Only your work inside Premiere: Editing time and actions on the timeline, as an orientational guide. It does not watch anything you do outside the app, and nothing leaves your computer.</p></details>
     <details><summary data-i18n="q6">How many devices does one license cover?</summary><p data-i18n="a6">One device per license. Changing computers? Just reach out to us and we will move your license to the new machine.</p></details>
     <details><summary data-i18n="q7">Can I cancel anytime?</summary><p data-i18n="a7">Yes. It is a monthly subscription with no lock-in, cancel whenever you want. The 14-day trial is free, and you are not charged if you cancel before it ends.</p></details>
   </div>
@@ -367,19 +374,19 @@
 
 <div class="line"></div>
 <section id="about"><div class="wrap">
-  <div class="head"><span class="kicker" data-i18n="aboutKicker">Who's behind it</span><h2 data-i18n="aboutH2">Built by an editor, for editors.</h2></div>
+  <div class="head"><span class="kicker" data-i18n="aboutKicker">Who's behind it</span><h2 data-i18n="aboutH2">Built by an editor, for editors</h2></div>
   <div class="aboutbody">
     <p data-i18n="aboutP1">I've edited hundreds of podcasts and TV productions. After thousands of hours in Premiere, I realized most editing time isn't spent making creative decisions. It's spent repeating the same mechanical tasks over and over.</p>
     <p data-i18n="aboutP2">Cutmarker was built to eliminate those tasks.</p>
     <p data-i18n="aboutP3">Every feature starts with a real production problem. If it doesn't save meaningful time or reduce mistakes, it doesn't get built.</p>
-    <p data-i18n="aboutP4">Today Cutmarker is developed by a growing team, with one goal: let editors spend more time editing and less time clicking. And when you need help, you reach the people who actually built it, not a ticket queue.</p>
+    <p data-i18n="aboutP4">Today Cutmarker is developed by a growing team, with one goal: Let editors spend more time editing and less time clicking. And when you need help, you reach the people who actually built it, not a ticket queue.</p>
     <p class="sign" data-i18n="aboutSign">Martin Götzl, Founder</p>
   </div>
 </div></section>
 
 <div class="line"></div>
 <section class="end"><div class="wrap">
-  <h2 data-i18n="endH2">Save hours on every episode.</h2>
+  <h2 data-i18n="endH2">Save hours on every episode</h2>
   <a class="btn" href="#waitlist">Join the waiting list</a>
 </div></section>
 
@@ -387,7 +394,7 @@
   <div class="top">
     <a class="logo" href="#"><svg class="lmark"><use href="#mark"/></svg> Cutmarker</a>
     <div class="col"><h4 data-i18n="footProduct">Product</h4><a href="#tools" data-i18n="navTools">Tools</a><a href="#pricing" data-i18n="navPricing">Pricing</a><a href="#about" data-i18n="footAbout">About</a><a href="#faq" data-i18n="navFaq">FAQ</a></div>
-    <div class="col"><h4 data-i18n="footMore">More</h4><a href="/roadmap" data-i18n="navRoadmap">Roadmap</a><a href="#waitlist">Affiliate</a><a href="https://discord.gg/GQ3xsVfTMP">Discord</a><a href="https://www.linkedin.com/company/cutmarker" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/cutmarkercom" target="_blank" rel="noopener">X</a></div>
+    <div class="col"><h4 data-i18n="footMore">More</h4><a href="#waitlist">Affiliate</a><a href="https://discord.gg/GQ3xsVfTMP">Discord</a><a href="https://www.linkedin.com/company/cutmarker" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/cutmarkercom" target="_blank" rel="noopener">X</a></div>
     <div class="col"><h4 data-i18n="footLegal">Legal</h4><a href="/legal#terms" data-i18n="footTerms">Terms &amp; Conditions</a><a href="/legal#eula" data-i18n="footEula">EULA</a><a href="/legal#privacy" data-i18n="footPrivacy">Privacy</a><a href="https://cutmarker.lemonsqueezy.com/billing" data-i18n="footManage">Manage subscription</a></div>
   </div>
   <div class="bottom"><span>© 2026 Cutmarker.com. All rights reserved.</span><span data-i18n="footTagline">An Autopod alternative for Premiere Pro.</span></div>
@@ -556,6 +563,15 @@
       else { return r.text().then(function(t){ throw new Error(t||r.status); }); }
     }).catch(function(){ msg.className='wl-msg err'; msg.textContent='Something went wrong, please try again.'; btn.disabled=false; btn.textContent=old; });
   });
+  function focusWaitlist(){
+    if(!f) return; var inp=f.email;
+    try{ f.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
+    if(!inp) return;
+    setTimeout(function(){ try{inp.focus({preventScroll:true});}catch(e){try{inp.focus();}catch(e2){}} inp.classList.add('flash'); setTimeout(function(){inp.classList.remove('flash');},2200); },420);
+  }
+  if(location.hash==='#waitlist') setTimeout(focusWaitlist,300);
+  window.addEventListener('hashchange',function(){ if(location.hash==='#waitlist') focusWaitlist(); });
+  document.addEventListener('click',function(e){ var t=e.target, a=(t&&t.closest)?t.closest('a'):null; if(a){ var h=a.getAttribute('href')||''; if(h.charAt(0)==='#'&&h.indexOf('waitlist')>-1) setTimeout(focusWaitlist,360); } });
 })();
 </script>
 </body>

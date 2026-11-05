@@ -7,8 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="description" content="Vote on what we build next in Cutmarker for Premiere Pro, and get an email when a feature ships.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/fonts.css">
 <style>
   :root{
     --bg:#0C0C11; --surface:#15151c; --surface2:#191921;
@@ -76,6 +75,8 @@
   .nform.on{display:flex}
   .nform input{background:var(--surface2);border:1px solid var(--bd2);color:var(--tx);border-radius:8px;padding:9px 12px;font-size:14px;flex:1;min-width:180px}
   .nform input:focus{outline:none;border-color:var(--pur)}
+  .nnote{flex-basis:100%;color:var(--tx3);font-size:11.5px;margin-top:2px;line-height:1.5}
+  .nnote a{color:var(--tx2);text-decoration:underline}
   .done{color:var(--green);font-size:14px;font-weight:600;margin-top:13px}
 
   .shipped{border-top:1px solid var(--bd);margin-top:22px;padding:26px 0 6px}
@@ -119,7 +120,7 @@
 </div></nav>
 
 <header class="head"><div class="wrap">
-  <h1 data-i18n="h1">Vote for what we build next.</h1>
+  <h1 data-i18n="h1">Vote for what we build next</h1>
   <p class="lead" data-i18n="lead">Drop your email on any item to hear when it ships.</p>
 </div></header>
 
@@ -129,10 +130,10 @@
   <div class="shipped">
     <h2 data-i18n="shippedH2">Already shipped</h2>
     <div class="sub" data-i18n="shippedSub">In your plan today, included as we keep building.</div>
-    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipMulticam">Auto Multicam: switch angles by who is speaking</span> <span class="pf">Premiere</span></div>
-    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipMic">Mic Bleed: duck cross-talk with editable keyframes</span> <span class="pf">Premiere</span></div>
-    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipSilence">Silence Cut: mark, ripple or disable dead air</span> <span class="pf">Premiere</span></div>
-    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipInsights">Insights: track where your editing time goes, per session</span> <span class="new" data-i18n="shipNew">New</span><span class="pf">Premiere</span></div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipMulticam">Auto Multicam: Switch angles by who is speaking</span> <span class="pf">Premiere</span></div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipMic">Mic Bleed: Duck cross-talk with editable keyframes</span> <span class="pf">Premiere</span></div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipSilence">Silence Cut: Mark, ripple or disable dead air</span> <span class="pf">Premiere</span></div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipInsights">Insights: Track where your editing time goes, per session</span> <span class="new" data-i18n="shipNew">New</span><span class="pf">Premiere</span></div>
   </div>
 
   <div class="band">
@@ -146,7 +147,7 @@
   <div class="top">
     <a class="logo" href="/"><svg class="lmark"><use href="#mark"/></svg> Cutmarker</a>
     <div class="col"><h4>Product</h4><a href="/#tools" data-i18n="navTools">Tools</a><a href="/#pricing" data-i18n="navPricing">Pricing</a><a href="/#about">About</a><a href="/#faq" data-i18n="navFaq">FAQ</a></div>
-    <div class="col"><h4>More</h4><a href="/roadmap" data-i18n="navRoadmap">Roadmap</a><a href="/#waitlist">Affiliate</a><a href="#" id="discFoot">Discord</a></div>
+    <div class="col"><h4>More</h4><a href="/#waitlist">Affiliate</a><a href="#" id="discFoot">Discord</a><a href="https://www.linkedin.com/company/cutmarker" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/cutmarkercom" target="_blank" rel="noopener">X</a></div>
     <div class="col"><h4>Legal</h4><a href="/legal#terms" data-i18n="footTerms">Terms &amp; Conditions</a><a href="/legal#eula" data-i18n="footEula">EULA</a><a href="/legal#privacy" data-i18n="footPrivacy">Privacy</a><a href="https://cutmarker.lemonsqueezy.com/billing">Manage subscription</a></div>
   </div>
   <div class="bottom"><span>© 2026 Cutmarker.com. All rights reserved.</span><span>An Autopod alternative for Premiere Pro.</span></div>
@@ -224,7 +225,7 @@
         '<div class="cbody">'+
         '<div class="crow"><h3>'+esc(title)+'</h3><button class="nbtn" onclick="toggleNotify(this)" '+(f.open?'style="display:none"':'')+'>'+notify+'</button></div>'+
         '<p><span class="st '+(STCLASS[f.status]||"")+'">'+statusLabel(f.status)+'</span>'+esc(desc)+'</p>'+
-        '<form class="nform '+(f.open?'on':'')+'" onsubmit="return subscribe(this,\''+f.slug+'\')"><input type="email" placeholder="your@email.com" required><button class="btn sm" type="submit">'+notify+'</button></form>'+
+        '<form class="nform '+(f.open?'on':'')+'" onsubmit="return subscribe(this,\''+f.slug+'\')"><input type="email" placeholder="your@email.com" required><button class="btn sm" type="submit">'+notify+'</button><div class="nnote">'+T("Napíšeme ti jen k této funkci. ","We only email you about this feature. ")+'<a href="/legal#privacy">'+T("Ochrana údajů","Privacy")+'</a>.</div></form>'+
         '</div>';
       board.appendChild(card);
     });
@@ -243,7 +244,7 @@
   async function subscribe(f,slug){
     var inp=f.querySelector("input"); var email=(inp.value||"").trim(); if(!email) return false;
     if(!SB){ alert(T("Přihlášení je teď nedostupné.","Sign-up is unavailable right now.")); return false; }
-    var res=await SB.from("signups").insert({email:email,feature:slug});
+    var res=await SB.from("signups").insert({email:email,feature:"roadmap:"+slug});
     if(res.error && res.error.code!=="23505"){ alert(T("Přihlášení selhalo: ","Sign-up failed: ")+res.error.message); return false; }
     var d=document.createElement("div"); d.className="done"; d.textContent=T("✓ Jsi na seznamu, ohledně téhle funkce ti napíšeme.","✓ You're on the list, we'll email you about this feature.");
     f.parentNode.replaceChild(d,f); return false;
