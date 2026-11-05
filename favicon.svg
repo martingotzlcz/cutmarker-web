@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+<rect width="96" height="96" rx="20" fill="#0C0C11"/>
+<g transform="translate(48,66) scale(0.85)">
+<mask id="fav"><rect x="-58" y="-56" width="116" height="60" fill="#fff"/><circle cx="0" cy="-26" r="12" fill="#000"/></mask>
+<g mask="url(#fav)">
+<rect x="9" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/>
+<rect x="-17" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/>
+<rect x="22" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/>
+<rect x="-30" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/>
+<rect x="35" y="-22" width="8" height="22" rx="4" fill="#6E7591"/>
+<rect x="-43" y="-22" width="8" height="22" rx="4" fill="#6E7591"/>
+</g>
+<rect x="-3.5" y="-22" width="7" height="22" rx="3.5" fill="#6B5BFF"/>
+<circle cx="0" cy="-26" r="7.5" fill="#6B5BFF"/>
+</g>
+</svg>
