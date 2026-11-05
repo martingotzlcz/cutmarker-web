@@ -169,6 +169,13 @@
   .price li .tick{color:var(--signal);flex:none;font-weight:700}
   .price .btn{width:100%;text-align:center;margin-top:auto}
   .price .yr{text-align:center;color:var(--tx3);font-size:13px;margin-top:13px}
+  .price.soon{background:#101016;border-color:var(--bd);box-shadow:none;align-self:flex-start;-webkit-mask-image:linear-gradient(180deg,#000 52%,transparent 96%);mask-image:linear-gradient(180deg,#000 52%,transparent 96%)}
+  .price.soon::before{display:none}
+  .price.soon h3{color:var(--tx2)}
+  .price.soon .amt{color:var(--tx3);font-weight:700}
+  .price.soon .pt,.price.soon li{color:var(--tx3)}
+  .price.soon .tick{color:var(--tx3)}
+  .soonbadge{position:absolute;top:18px;right:18px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);border:1px solid var(--bd2);border-radius:6px;padding:3px 8px}
 
   .afftwo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
   @media(max-width:760px){.afftwo{grid-template-columns:1fr}}
@@ -193,7 +200,7 @@
 
   .aboutbody{line-height:1.65;column-count:2;column-gap:48px}
   .aboutbody p{margin:0 0 14px;break-inside:avoid}
-  .aboutbody .sign{column-span:all;color:var(--tx3);margin-top:6px;font-weight:600}
+  .aboutbody .sign{column-span:all;color:var(--tx3);margin-top:6px;font-weight:600;text-align:right}
   @media(max-width:680px){.aboutbody{column-count:1}}
 
   .end{text-align:center;padding:74px 0}
@@ -308,10 +315,10 @@
 
 <div class="line"></div>
 <section id="pricing"><div class="wrap">
-  <div class="head" style="margin:0 0 32px"><span class="kicker" data-i18n="priceKicker">Pricing</span><h2 data-i18n="priceH2">One simple price</h2></div>
+  <div class="head" style="margin:0 0 32px"><span class="kicker" data-i18n="priceKicker">Pricing</span><h2 data-i18n="priceH2">One price, all tools</h2></div>
   <div class="prices">
   <div class="price">
-    <h3>Cutmarker</h3>
+    <h3>Solo</h3>
     <div class="pt" data-i18n="pricePt">Everything in one plan</div>
     <div class="amt">$19<small data-i18n="perMonth"> / month</small></div>
     <div class="pt" style="color:var(--signal);margin-top:6px">Founding price. It becomes $24.99 later.</div>
@@ -329,8 +336,17 @@
     <a class="btn" href="#waitlist">Join the waiting list</a>
     <div class="yr" data-i18n="priceYr">or $189 per year (2 months free)</div>
   </div>
+  <div class="price soon">
+    <div class="soonbadge">Coming soon</div>
+    <h3>Studio</h3>
+    <div class="pt">For teams and agencies</div>
+    <ul>
+      <li><span class="tick">·</span><span>Multiple seats</span></li>
+      <li><span class="tick">·</span><span>Central licensing</span></li>
+      <li><span class="tick">·</span><span>and more</span></li>
+    </ul>
   </div>
-  <p style="text-align:center;margin-top:22px;color:var(--tx2);font-size:14px"><b style="color:var(--tx)">Studio plan</b> for teams and agencies, coming soon.</p>
+  </div>
 </div></section>
 
 <div class="line"></div>
@@ -376,10 +392,9 @@
 <section id="about"><div class="wrap">
   <div class="head"><span class="kicker" data-i18n="aboutKicker">Who's behind it</span><h2 data-i18n="aboutH2">Built by an editor, for editors</h2></div>
   <div class="aboutbody">
-    <p data-i18n="aboutP1">I've edited hundreds of podcasts and TV productions. After thousands of hours in Premiere, I realized most editing time isn't spent making creative decisions. It's spent repeating the same mechanical tasks over and over.</p>
+    <p data-i18n="aboutP1">After thousands of hours in Premiere, I realized most editing time isn't spent making creative decisions. It's spent repeating the same mechanical tasks over and over.</p>
     <p data-i18n="aboutP2">Cutmarker was built to eliminate those tasks.</p>
     <p data-i18n="aboutP3">Every feature starts with a real production problem. If it doesn't save meaningful time or reduce mistakes, it doesn't get built.</p>
-    <p data-i18n="aboutP4">Today Cutmarker is developed by a growing team, with one goal: Let editors spend more time editing and less time clicking. And when you need help, you reach the people who actually built it, not a ticket queue.</p>
     <p class="sign" data-i18n="aboutSign">Martin Götzl, Founder</p>
   </div>
 </div></section>
@@ -397,7 +412,7 @@
     <div class="col"><h4 data-i18n="footMore">More</h4><a href="#waitlist">Affiliate</a><a href="https://discord.gg/GQ3xsVfTMP">Discord</a><a href="https://www.linkedin.com/company/cutmarker" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/cutmarkercom" target="_blank" rel="noopener">X</a></div>
     <div class="col"><h4 data-i18n="footLegal">Legal</h4><a href="/legal#terms" data-i18n="footTerms">Terms &amp; Conditions</a><a href="/legal#eula" data-i18n="footEula">EULA</a><a href="/legal#privacy" data-i18n="footPrivacy">Privacy</a><a href="https://cutmarker.lemonsqueezy.com/billing" data-i18n="footManage">Manage subscription</a></div>
   </div>
-  <div class="bottom"><span>© 2026 Cutmarker.com. All rights reserved.</span><span data-i18n="footTagline">An Autopod alternative for Premiere Pro.</span></div>
+  <div class="bottom"><span>© 2026 Cutmarker.com. All rights reserved.</span></div>
 </div></footer>
 
 <script>
