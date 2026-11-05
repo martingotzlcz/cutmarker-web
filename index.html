@@ -3,31 +3,558 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cutmarker</title>
-<meta name="robots" content="noindex">
+<title>Cutmarker · Auto-edit your video podcast in Premiere Pro</title>
+<meta name="description" content="Auto-edit your video podcast in Adobe Premiere Pro: auto multicam, mic bleed cleanup, silence cut, final check and time insights. A local Autopod alternative.">
+<meta property="og:title" content="Cutmarker · Auto-edit your video podcast in Premiere Pro">
+<meta property="og:description" content="Auto multicam, mic bleed, silence cut, final check and time insights, all inside Premiere Pro. A local Autopod alternative.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#0b0b0d;--tx:#ededf0;--tx2:#9b9ba6;--tx3:#6b6b76;--pur2:#a99cff}
+  :root{
+    --bg:#0C0C11; --surface:#15151B; --surface2:#1B1B23;
+    --bd:rgba(255,255,255,.08); --bd2:rgba(255,255,255,.15);
+    --tx:#ECECEF; --tx2:#9A9AA4; --tx3:#6E6E78;
+    --pur:#6B5BFF; --pur2:#a99cff; --purd:#5a4be0; --grey:#9098A9; --signal:#8BE9B0;
+    --hi:0 1px 0 rgba(255,255,255,.05) inset;
+    --sh1:0 2px 10px rgba(0,0,0,.30);
+    --sh2:0 20px 56px rgba(0,0,0,.50);
+    --glow:0 8px 26px rgba(107,91,255,.40);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
-  svg.mark{width:66px;height:auto;margin-bottom:22px}
-  h1{font-size:26px;letter-spacing:-.02em;font-weight:700}
-  .soon{color:var(--pur2);font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:16px}
-  footer{position:fixed;bottom:0;left:0;right:0;padding:20px;color:var(--tx3);font-size:12.5px}
-  footer a{color:var(--tx3);text-decoration:none}footer a:hover{color:var(--tx2)}
+  html{scroll-behavior:smooth;scroll-padding-top:72px}
+  body{font-family:'Inter',-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px;background:radial-gradient(1100px 560px at 50% -160px,rgba(107,91,255,.15),transparent 62%),radial-gradient(820px 400px at 88% 2%,rgba(139,233,176,.05),transparent 60%),var(--bg)}
+  h1,h2,h3,.logo{font-family:'Archivo',-apple-system,"Segoe UI",sans-serif}
+  .kicker,.badges .p,.plat .p,.heroshot .bar .t{font-family:'JetBrains Mono',ui-monospace,monospace;letter-spacing:0}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  .btn{position:relative;overflow:hidden;display:inline-block;background:linear-gradient(180deg,#7c6dff,#6B5BFF);color:#fff;font-weight:600;padding:11px 20px;border-radius:10px;font-size:15px;border:1px solid #7c6dff;box-shadow:var(--hi),var(--glow);transition:transform .14s,box-shadow .14s,filter .14s}
+  .btn:not(.ghost)::before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(115deg,transparent 36%,rgba(255,255,255,.28) 50%,transparent 64%);transform:translateX(-120%);transition:transform .7s cubic-bezier(.3,.7,.3,1);pointer-events:none}
+  .btn:not(.ghost):hover::before{transform:translateX(120%)}
+  .btn:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 12px 32px rgba(107,91,255,.55)}
+  .btn:active{transform:translateY(0) scale(.99)}
+  .btn.ghost{background:rgba(255,255,255,.02);color:var(--tx);border:1px solid var(--bd2);box-shadow:none}
+  .btn.ghost:hover{border-color:var(--tx3);background:var(--surface);transform:translateY(-1px);filter:none}
+  .btn.sm{padding:8px 15px;font-size:14px}
+  h1{font-size:clamp(31px,4.0vw,43px);line-height:1.08;letter-spacing:-.02em;font-weight:800;font-stretch:112%}
+  h2{font-size:clamp(25px,3.0vw,34px);line-height:1.12;letter-spacing:-.02em;font-weight:800;font-stretch:112%}
+  h3{font-size:17px;font-weight:700;letter-spacing:-.01em;font-stretch:108%}
+  h2,h3,.hero p.lead,.aff h3,.end h2{text-wrap:balance}
+  p,li,summary,.cta-note{text-wrap:pretty}
+  .muted{color:var(--tx2)}
+  .kicker{color:var(--tx3);font-size:11.5px;font-weight:500;display:flex;align-items:center;gap:9px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.16em}
+  .kicker::before{content:"";flex:none;width:7px;height:7px;border-radius:1px;transform:rotate(45deg);background:var(--signal);box-shadow:0 0 8px rgba(139,233,176,.5)}
+  .kicker .tc{color:var(--tx2);font-weight:600;margin-right:2px}
+  section{padding:58px 0}
+  .line{display:none}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(11,11,13,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{display:inline-flex;align-items:baseline;gap:.28em;font-weight:900;font-size:17px;letter-spacing:-.02em;font-stretch:125%}
+  .logo .lmark{height:.72em;width:auto;aspect-ratio:86/46;flex:none;align-self:baseline}
+  nav .links{display:flex;gap:26px;align-items:center}
+  nav .links a{color:var(--tx2);font-size:14.5px;font-weight:500;transition:.15s}
+  nav .links a:not(.btn):not(.langbtn){font-family:'Archivo',-apple-system,sans-serif;font-stretch:106%;font-weight:600;font-size:14px;letter-spacing:-.005em}
+  nav .links a:hover{color:var(--tx)}
+  nav .links a.btn{color:#fff}
+  .langbtn{background:transparent;border:1px solid var(--bd2);color:var(--tx2);font-size:13px;font-weight:600;padding:5px 10px;border-radius:7px;cursor:pointer;font-family:inherit;transition:.15s}
+  .langbtn:hover{color:var(--tx);border-color:var(--tx3)}
+  @media(max-width:760px){nav .links a:not(.btn){display:none}}
+  #scrub{position:fixed;top:0;left:0;right:0;height:5px;z-index:60;background:repeating-linear-gradient(90deg,rgba(255,255,255,.11) 0 1px,transparent 1px 12px)}
+  #scrub .pf{position:absolute;top:0;left:0;height:100%;width:0;background:linear-gradient(90deg,var(--pur),var(--signal))}
+  #scrub .ph{position:absolute;top:-2px;left:0;width:2px;height:9px;border-radius:1px;background:var(--signal);box-shadow:0 0 8px 1px rgba(139,233,176,.7);transform:translateX(-1px);z-index:3}
+  #scrub .kf{position:absolute;top:50%;width:8px;height:8px;border-radius:1.5px;transform:translate(-50%,-50%) rotate(45deg);background:#4a4a59;box-shadow:0 0 0 2px rgba(12,12,17,.92);cursor:pointer;z-index:2;transition:background .25s ease,box-shadow .25s ease}
+  #scrub .kf.on{background:var(--signal);box-shadow:0 0 7px 1px rgba(139,233,176,.55),0 0 0 2px rgba(12,12,17,.92)}
+  #scrub .kf:hover{background:var(--pur);box-shadow:0 0 7px 1px rgba(107,91,255,.6),0 0 0 2px rgba(12,12,17,.92)}
+  #scrub .sweep{position:absolute;top:0;bottom:0;width:90px;transform:translateX(-100px);background:linear-gradient(90deg,transparent,rgba(139,233,176,.55),transparent);z-index:4;pointer-events:none;animation:scrubsweep 1.5s cubic-bezier(.4,0,.2,1) .35s 1 both}
+  @keyframes scrubsweep{0%{transform:translateX(-100px);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(100vw);opacity:0}}
+
+  .hero{padding:74px 0 0;text-align:center}
+  .hero .tagrow{display:inline-flex;align-items:center;gap:8px;color:var(--tx3);font-size:13.5px;margin-bottom:20px}
+  .hero .tagrow .dot{width:6px;height:6px;border-radius:99px;background:var(--pur)}
+  .hero h1{max-width:680px;margin:0 auto}
+  .hero p.lead{font-size:17px;color:var(--tx2);margin:20px auto 28px;max-width:560px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+  .cta-note{color:var(--tx3);font-size:13px;margin-top:16px}
+  #bgwave{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+  #bgwave .wt{position:absolute;top:50%;left:0;display:flex;width:200%;height:44vh;transform:translateY(-50%);animation:drift 64s linear infinite;will-change:transform;opacity:.08}
+  #bgwave .wt svg{width:50%;height:100%;display:block;flex:none}
+  @keyframes drift{from{transform:translate(0,-50%)}to{transform:translate(-50%,-50%)}}
+
+  .trust{margin-top:26px;color:var(--tx2);font-size:13.5px}
+  .hero-badges{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+  .hero-badges span{font-size:12px;color:var(--tx2);display:inline-flex;align-items:center;gap:7px;letter-spacing:.01em}
+  .hero-badges span::before{content:"";width:6px;height:6px;border-radius:1px;transform:rotate(45deg);background:var(--signal);box-shadow:0 0 6px rgba(139,233,176,.5);flex:none}
+  .hero-visual{max-width:560px;margin:40px auto 0;border:1px solid var(--bd);border-radius:14px;background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px}
+  .hv-row{display:flex;align-items:center;gap:6px;height:24px}
+  .hv-lab{width:36px;font-size:10px;color:var(--tx3);letter-spacing:.08em;text-align:left;flex:none}
+  .hv-row i{height:18px;border-radius:4px;flex:1;display:block}
+  .hv-row i.a{background:rgba(107,91,255,.85)}
+  .hv-row i.b{background:rgba(160,150,255,.45)}
+  .hv-row i.c{background:rgba(144,152,169,.35)}
+  .hv-row svg{flex:1;height:24px;stroke:var(--pur2);stroke-width:2;fill:none}
+
+  /* waiting list form */
+  .wl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:470px;margin:0 auto}
+  .wl-input{flex:1 1 240px;background:var(--surface);border:1px solid var(--bd2);color:var(--tx);padding:11px 15px;border-radius:10px;font-size:15px;font-family:inherit}
+  .wl-input::placeholder{color:var(--tx3)}
+  .wl-input:focus{outline:none;border-color:var(--pur2);box-shadow:0 0 0 3px rgba(107,91,255,.18)}
+  .wl .btn{flex:none}
+  .wl-msg{min-height:18px;margin-top:10px;font-size:13.5px;color:var(--signal);text-align:center}
+  .wl-msg.err{color:#ff7a7a}
+  .wl-priv{max-width:470px;margin:7px auto 0;font-size:11.5px;color:var(--tx3);text-align:center;line-height:1.5}
+  .wl-priv a{color:var(--tx2);text-decoration:underline}
+  .wl-done{max-width:470px;margin:0 auto;background:rgba(139,233,176,.08);border:1px solid rgba(139,233,176,.4);border-radius:12px;padding:14px 18px;color:var(--tx);font-size:15px;display:flex;align-items:center;gap:10px;justify-content:center;animation:fadeup .5s cubic-bezier(.2,.7,.3,1) both}
+  .wl-done .ck{color:var(--signal);font-weight:800;font-size:18px;flex:none}
+  /* hero video */
+  .herovid{max-width:760px;margin:44px auto 0;border:1px solid var(--bd2);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:var(--hi),var(--sh2),0 0 46px -14px rgba(107,91,255,.35);line-height:0}
+  .herovid video{width:100%;height:auto;display:block}
+
+  .head{max-width:none;margin-bottom:32px;position:relative}
+  .head .kicker{margin-bottom:0}
+  .head .hruler{height:11px;margin:8px 0 14px 3px;background:repeating-linear-gradient(90deg,var(--bd2) 0 1px,transparent 1px 13px);-webkit-mask:linear-gradient(90deg,#000,#000 55%,transparent);mask:linear-gradient(90deg,#000,#000 55%,transparent);opacity:.75}
+  .head h2{margin-bottom:0;max-width:600px}
+
+  .tools{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media(max-width:760px){.tools{grid-template-columns:1fr}}
+  .tool{position:relative;overflow:hidden;border-radius:16px;padding:24px 24px;min-height:186px;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--bd2);box-shadow:var(--hi),var(--sh1);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+  .tool::after{content:"";position:absolute;inset:0;background:radial-gradient(95% 85% at 0% 0%,rgba(123,108,255,.20),rgba(123,108,255,.05) 45%,transparent 70%);pointer-events:none}
+  .tool:hover{transform:translateY(-2px);border-color:rgba(123,108,255,.35);box-shadow:var(--hi),0 20px 42px -22px rgba(107,91,255,.5)}
+  .tool::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--signal);box-shadow:0 0 9px rgba(139,233,176,.5);transform:scaleX(0);transform-origin:left;transition:transform .55s cubic-bezier(.2,.8,.25,1);z-index:3}
+  .tool.is-in::before,.tool:hover::before{transform:scaleX(1)}
+  .tool .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;position:relative;z-index:2}
+  .tool .ico{width:36px;height:36px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--bd2);box-shadow:var(--hi);display:flex;align-items:center;justify-content:center;transition:box-shadow .2s,border-color .2s}
+  .tool:hover .ico{border-color:rgba(139,233,176,.45);box-shadow:0 0 0 1px rgba(139,233,176,.22),0 0 14px rgba(139,233,176,.12)}
+  .tool .edgelabel{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--pur2)}
+  .tool .edgelabel[data-i18n="edgeOur"]{color:var(--signal)}
+  .tool h3{margin:0 0 6px;font-size:18px;position:relative;z-index:2}
+  .tool p{color:var(--tx2);font-size:14px;line-height:1.55;position:relative;z-index:2}
+  .plat{display:flex;gap:15px;margin-top:15px;flex-wrap:wrap;position:relative;z-index:2}
+  .plat .p{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--pur2)}
+  .plat .p::before{content:"";width:6px;height:6px;border-radius:1px;transform:rotate(45deg);background:var(--signal);box-shadow:0 0 6px rgba(139,233,176,.5)}
+  .plat .p.off{color:var(--tx3)}
+  .plat .p.off::before{background:var(--tx3);box-shadow:none}
+  .tool.soon,.tool.rm{background:#101016}
+  .tool.soon::after,.tool.rm::after,.tool.soon::before,.tool.rm::before{display:none}
+  .tool.soon h3,.tool.rm h3{color:var(--tx2)!important}
+  .tool.soon p,.tool.rm p{color:var(--tx3)}
+  .tool.soon .edgelabel,.tool.rm .edgelabel{color:var(--tx3)!important}
+  .tool.soon .plat .p,.tool.rm .plat .p{color:var(--tx3)}
+  .tool.soon .plat .p::before{background:var(--tx3);box-shadow:none}
+  .tool.rm .plat .p::before{display:none}
+  .tool.rm{cursor:pointer}
+  .tool.rm h3,.tool.rm .edgelabel,.tool.rm .plat .p,.tool.rm .ico svg{transition:color .2s ease,stroke .2s ease,transform .2s ease}
+  .tool.rm:hover{background:rgba(139,233,176,.09);border-color:rgba(139,233,176,.6);box-shadow:var(--hi),0 18px 44px -20px rgba(139,233,176,.45)}
+  .tool.rm:hover h3{color:var(--tx)!important}
+  .tool.rm:hover .edgelabel{color:var(--signal)!important}
+  .tool.rm:hover .ico{border-color:rgba(139,233,176,.45);box-shadow:0 0 0 1px rgba(139,233,176,.22),0 0 14px rgba(139,233,176,.12)}
+  .tool.rm:hover .ico svg{stroke:var(--signal)}
+  .tool.rm:hover .plat .p{color:var(--signal)!important;transform:translateX(3px)}
+
+  .prices{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;align-items:stretch;max-width:920px;margin:0 auto}
+.price{position:relative;overflow:hidden;display:flex;flex-direction:column;flex:1 1 340px;max-width:440px;background:var(--surface);border:1px solid rgba(139,233,176,.32);border-radius:18px;padding:30px;box-shadow:var(--hi),var(--sh2),0 0 42px -10px rgba(139,233,176,.18)}
+  .price::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--signal);box-shadow:0 0 12px rgba(139,233,176,.7);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.8,.25,1)}
+  .price.is-in::before{transform:scaleX(1)}
+  .price .pt{color:var(--tx2);font-size:14px;margin-top:2px}
+  .price .amt{font-family:'Archivo',sans-serif;font-stretch:115%;font-size:46px;font-weight:800;letter-spacing:-.02em;margin:12px 0 0}
+  .price .amt small{font-size:16px;color:var(--tx2);font-weight:500;letter-spacing:0}
+  .price ul{list-style:none;margin:20px 0 24px}
+  .price li{padding:8px 0;font-size:14px;color:var(--tx2);display:flex;gap:10px;align-items:flex-start;border-top:1px solid var(--bd)}
+  .price li:first-child{border-top:none}
+  .price li.note{font-size:12.5px;color:var(--tx3);padding:4px 0;border-top:none;gap:8px;align-items:center}
+  .price li.note::before{content:"·";color:var(--tx3);font-weight:700}
+  .price li .tick{color:var(--signal);flex:none;font-weight:700}
+  .price .btn{width:100%;text-align:center;margin-top:auto}
+  .price .yr{text-align:center;color:var(--tx3);font-size:13px;margin-top:13px}
+
+  .afftwo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+  @media(max-width:760px){.afftwo{grid-template-columns:1fr}}
+  .aff{background:var(--surface);border:1px solid var(--bd2);border-radius:16px;padding:24px 26px;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:var(--hi),var(--sh1)}
+  .aff h3{font-size:19px;margin-bottom:5px}
+  .aff p{color:var(--tx2);font-size:14px;max-width:500px}
+
+  .faq{max-width:none}
+  details{border-top:1px solid var(--bd)}
+  details:last-child{border-bottom:1px solid var(--bd)}
+  summary{cursor:pointer;padding:16px 0;font-weight:600;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--tx3);font-size:20px;font-weight:400;transition:transform .25s ease,color .2s ease}
+  details[open] summary::after{transform:rotate(45deg);color:var(--signal)}
+  details[open] p{animation:fadeup .45s cubic-bezier(.2,.7,.3,1) both}
+  @supports (interpolate-size: allow-keywords){
+    :root{interpolate-size:allow-keywords}
+    details::details-content{block-size:0;overflow:hidden;transition:block-size .35s ease,content-visibility .35s allow-discrete}
+    details[open]::details-content{block-size:auto}
+  }
+  details p{color:var(--tx2);padding:0 0 18px;font-size:14px;max-width:780px}
+
+  .aboutbody{line-height:1.65;column-count:2;column-gap:48px}
+  .aboutbody p{margin:0 0 14px;break-inside:avoid}
+  .aboutbody .sign{column-span:all;color:var(--tx3);margin-top:6px;font-weight:600}
+  @media(max-width:680px){.aboutbody{column-count:1}}
+
+  .end{text-align:center;padding:74px 0}
+  .end h2{margin-bottom:18px}
+
+  footer{border-top:1px solid var(--bd);padding:40px 0 34px;color:var(--tx2);font-size:14px}
+  footer .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:28px;margin-bottom:26px}
+  footer .col h4{color:var(--tx);font-size:13px;margin-bottom:12px;font-weight:600}
+  footer .col a{display:block;color:var(--tx2);padding:4px 0;transition:color .18s ease,transform .18s ease}
+  footer .col a:hover{color:var(--tx);transform:translateX(3px)}
+  footer .bottom{border-top:1px solid var(--bd);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--tx3)}
+
+  @keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .hero h1,.hero .lead,.hero .cta-row,.hero .hero-badges,.hero .cta-note{animation:fadeup .6s cubic-bezier(.2,.7,.3,1) both}
+  .hero .lead{animation-delay:.06s}.hero .cta-row{animation-delay:.12s}.hero .hero-badges{animation-delay:.18s}.hero .cta-note{animation-delay:.24s}
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .8s ease,transform .8s cubic-bezier(.16,.84,.3,1)}
+  .reveal.is-in{opacity:1;transform:none}
+  .tool{transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease,opacity .7s ease}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
+<script>window.lemonSqueezyAffiliateConfig = { store: "cutmarker" };</script>
+<script src="https://lmsqueezy.com/affiliate.js" defer></script>
 </head>
 <body>
-  <svg class="mark" viewBox="-43 -46 86 46" fill="none" role="img" aria-label="Cutmarker">
-    <mask id="ntch"><rect x="-58" y="-56" width="116" height="60" fill="#fff"/><circle cx="0" cy="-26" r="12" fill="#000"/></mask>
-    <g mask="url(#ntch)">
-      <rect x="9" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/><rect x="-17" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/>
-      <rect x="22" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/><rect x="-30" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/>
-      <rect x="35" y="-22" width="8" height="22" rx="4" fill="#6E7591"/><rect x="-43" y="-22" width="8" height="22" rx="4" fill="#6E7591"/>
-    </g>
-    <rect x="-3.5" y="-22" width="7" height="22" rx="3.5" fill="#6B5BFF"/><circle cx="0" cy="-26" r="7.5" fill="#6B5BFF"/>
-  </svg>
-  <h1>Cutmarker</h1>
-  <div class="soon">Coming soon</div>
-  <footer><a href="/legal.html">Terms &amp; Privacy</a> &nbsp;&middot;&nbsp; support@cutmarker.com</footer>
+<div id="scrub"><span class="pf"></span><span class="ph"></span><span class="sweep"></span></div>
+<div id="bgwave" aria-hidden="true"><div class="wt"></div></div>
+
+<svg width="0" height="0" style="position:absolute"><symbol id="mark" viewBox="-43 -46 86 46"><mask id="ntch"><rect x="-58" y="-56" width="116" height="60" fill="#fff"/><circle cx="0" cy="-26" r="12" fill="#000"/></mask><g mask="url(#ntch)"><rect x="9" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/><rect x="-17" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/><rect x="22" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/><rect x="-30" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/><rect x="35" y="-22" width="8" height="22" rx="4" fill="#6E7591"/><rect x="-43" y="-22" width="8" height="22" rx="4" fill="#6E7591"/></g><rect x="-3.5" y="-22" width="7" height="22" rx="3.5" fill="#6B5BFF"/><circle cx="0" cy="-26" r="7.5" fill="#6B5BFF"/></symbol></svg>
+
+<nav><div class="wrap">
+  <a class="logo" href="#"><svg class="lmark"><use href="#mark"/></svg> Cutmarker</a>
+  <div class="links">
+    <a href="#tools" data-i18n="navTools">Tools</a>
+    <a href="#pricing" data-i18n="navPricing">Pricing</a>
+    <a href="#faq" data-i18n="navFaq">FAQ</a>
+    <a href="roadmap.html" data-i18n="navRoadmap">Roadmap</a>
+    <!-- Jazykový přepínač skrytý pro launch (čeština se doplní později). Zapnout = odkomentovat + vrátit LANG=pickDefault() níže. -->
+    <!-- <button id="langBtn" class="langbtn">CZ</button> -->
+    <a class="btn sm" href="#waitlist">Join waiting list</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <h1 data-i18n="heroH1">Auto-edit your video podcast.<br>Multicam done in seconds.</h1>
+  <p class="lead" data-i18n="heroLead">Switch cameras by who's speaking, cut the silence, and clean up the bleed between your mics. All inside Premiere Pro, fully on your machine. No uploads, no minute limits.</p>
+  <form id="waitlist" class="wl" novalidate>
+    <input class="wl-input" type="email" name="email" required autocomplete="email" placeholder="you@email.com" aria-label="Email">
+    <button class="btn" type="submit">Join the waiting list</button>
+  </form>
+  <div class="wl-priv" id="wlPriv">We only email you about the launch. No spam. <a href="legal.html#privacy">Privacy</a>.</div>
+  <div class="wl-msg" id="wlMsg" role="status" aria-live="polite"></div>
+  <div class="wl-done" id="wlDone" style="display:none"><span class="ck">&#10003;</span><span id="wlDoneTxt">You're on the list. We'll be in touch before launch.</span></div>
+  <div class="hero-badges">
+    <span data-i18n="bdg1">Runs in Premiere Pro</span>
+    <span data-i18n="bdg2">Nothing leaves your computer</span>
+    <span data-i18n="bdg3">No AI minute limits</span>
+    <span data-i18n="bdg4">14-day free trial</span>
+  </div>
+  <div class="herovid">
+    <video src="assets/Multicam_hero_web.mp4" autoplay muted loop playsinline preload="metadata"></video>
+  </div>
+  <p style="text-align:center;margin-top:14px;color:var(--pur2);font-size:12px;font-family:'JetBrains Mono',ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase">Auto Multicam</p>
+</div></header>
+
+<section id="tools"><div class="wrap">
+  <div class="head" style="margin:0 0 34px"><span class="kicker" data-i18n="toolsKicker">The toolkit</span><h2 data-i18n="toolsH2">All tools, one plugin.</h2></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="12" height="10" rx="2.6" stroke="#9098A9" stroke-width="2"/><rect x="9" y="9" width="12" height="10" rx="2.6" fill="#6B5BFF"/></svg></div></div>
+      <h3>Auto Multicam</h3>
+      <p data-i18n="tMulticamDesc">Switches camera angles by who is speaking, with smart timing that won't cut on every "mhm".</p>
+      <div class="plat"><span class="p on">Premiere Pro</span><span class="p off" data-i18n="davinciSoon">DaVinci in progress</span></div>
+    </div>
+    <div class="tool edge">
+      <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="3" height="13" rx="1.5" fill="#9098A9"/><rect x="17" y="6" width="3" height="13" rx="1.5" fill="#9098A9"/><path d="M12 4.5 V13 M8.5 9.8 L12 13.6 L15.5 9.8" stroke="#6B5BFF" stroke-width="2.4" fill="none"/></svg></div><span class="edgelabel" data-i18n="edgeOur">Our edge</span></div>
+      <h3>Mic Bleed</h3>
+      <p data-i18n="tMicDesc">Ducks cross-talk between mics and writes editable keyframes you control. Not a black box like other audio plugins.</p>
+      <div class="plat"><span class="p on">Premiere Pro</span></div>
+    </div>
+    <div class="tool">
+      <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-linecap="round"><rect x="4" y="4" width="2.6" height="16" rx="1.3" fill="#9098A9"/><rect x="17.4" y="4" width="2.6" height="16" rx="1.3" fill="#9098A9"/><path d="M9 8.5 L15 15.5 M15 8.5 L9 15.5" stroke="#6B5BFF" stroke-width="2.3"/></svg></div></div>
+      <h3>Silence Cut</h3>
+      <p data-i18n="tSilenceDesc">Finds dead air and marks, cuts, or disables it. Your call. Backs up first.</p>
+      <div class="plat"><span class="p on">Premiere Pro</span><span class="p off" data-i18n="davinciSoon">DaVinci in progress</span></div>
+    </div>
+    <div class="tool edge">
+      <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.3" stroke="#9098A9" stroke-width="2"/><path d="M12 7.3 V12 L15.2 14" stroke="#6B5BFF" stroke-width="2.2" fill="none"/></svg></div><span class="edgelabel">Beta</span></div>
+      <h3>Insights</h3>
+      <p data-i18n="tInsightsDesc">An orientational look at where your editing time goes: editing, watching and breaks, logged per work session with real timestamps. Export a CSV. Runs locally.</p>
+      <div class="plat"><span class="p on">Premiere Pro</span></div>
+    </div>
+    <div class="tool soon">
+      <div class="top"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 L10 17.5 L19.5 7" stroke="#6B5BFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="edgelabel" data-i18n="edgeSoon">Coming soon</span></div>
+      <h3>Final Check</h3>
+      <p data-i18n="tFinalDesc">Coming next: it will scan your finished edit for clipping, dead air, black gaps and stray micro-cuts, so you can export with confidence.</p>
+      <div class="plat"><span class="p off" data-i18n="soonLabel">In development</span></div>
+    </div>
+    <a class="tool rm" href="roadmap.html" style="text-decoration:none">
+      <div class="top"><div class="ico" style="background:rgba(255,255,255,.05)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b6b76" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></div><span class="edgelabel" style="color:var(--tx3)" data-i18n="edgeRoadmap">Roadmap</span></div>
+      <h3 style="color:var(--tx2)" data-i18n="roadmapH3">More on the way</h3>
+      <p data-i18n="roadmapDesc">We're building more tools. See what's next and vote for what we ship.</p>
+      <div class="plat"><span class="p off" data-i18n="roadmapVote">Vote on the roadmap →</span></div>
+    </a>
+  </div>
+</div></section>
+
+<div class="line"></div>
+<section id="pricing"><div class="wrap">
+  <div class="head" style="margin:0 0 32px"><span class="kicker" data-i18n="priceKicker">Pricing</span><h2 data-i18n="priceH2">One simple price.</h2></div>
+  <div class="prices">
+  <div class="price">
+    <h3>Cutmarker</h3>
+    <div class="pt" data-i18n="pricePt">Everything in one plan</div>
+    <div class="amt">$19<small data-i18n="perMonth"> / month</small></div>
+    <div class="pt" style="color:var(--signal);margin-top:6px">Founding price. It becomes $24.99 later.</div>
+    <div class="pt" style="margin-top:4px;font-size:12.5px">Our thank-you to the first users who join early and help shape Cutmarker with their feedback.</div>
+    <ul>
+      <li><span class="tick">✓</span><span data-i18n="pl1">Auto Multicam: switches by who is speaking</span></li>
+      <li><span class="tick">✓</span><span data-i18n="pl2">Mic Bleed: editable keyframes you control</span></li>
+      <li><span class="tick">✓</span><span data-i18n="pl3">Silence Cut: mark, cut, or disable</span></li>
+      <li><span class="tick">✓</span><span data-i18n="pl5">Insights (beta): see where your editing time goes</span></li>
+      <li class="note" style="margin-top:10px"><span data-i18n="pn1">Runs 100% locally, no uploads, no limits</span></li>
+      <li class="note"><span data-i18n="pn5">No per-minute fees, no AI credits, unlimited footage</span></li>
+      <li class="note"><span data-i18n="pn3">Every new tool and update included as we ship them</span></li>
+      <li class="note"><span data-i18n="pn4">14-day free trial, cancel anytime</span></li>
+    </ul>
+    <a class="btn" href="#waitlist">Join the waiting list</a>
+    <div class="yr" data-i18n="priceYr">or $189 per year (2 months free)</div>
+  </div>
+  </div>
+  <p style="text-align:center;margin-top:22px;color:var(--tx2);font-size:14px"><b style="color:var(--tx)">Studio plan</b> for teams and agencies, coming soon.</p>
+</div></section>
+
+<div class="line"></div>
+<section id="affiliate"><div class="wrap">
+  <div class="head"><span class="kicker" data-i18n="affKicker">Earn with us</span></div>
+  <div class="afftwo">
+    <div class="aff">
+      <div>
+        <h3 data-i18n="affH3">Affiliate program.</h3>
+        <p data-i18n="affDesc">Refer Cutmarker and earn 10% on every payment your referrals make, for as long as they stay subscribed.</p>
+      </div>
+      <a class="btn ghost" href="https://cutmarker.lemonsqueezy.com/affiliates" data-i18n="affBtn">Join the program</a>
+    </div>
+    <!-- Bug reward (skryté, k pozdějšímu zapnutí):
+    <div class="aff">
+      <div>
+        <h3 data-i18n="bugH3">Find a bug, get a month free.</h3>
+        <p data-i18n="bugDesc">Spot a real, reproducible bug in a released version (not the beta) and tell us. Your next month is on us.</p>
+      </div>
+      <a class="btn ghost" href="#" data-i18n="bugBtn">Report a bug</a>
+    </div>
+    -->
+  </div>
+</div></section>
+
+<div class="line"></div>
+<section id="faq"><div class="wrap">
+  <div class="head"><span class="kicker" data-i18n="faqKicker">FAQ</span><h2 data-i18n="faqH2">Good questions.</h2></div>
+  <div class="faq">
+    <details open><summary data-i18n="q1">Which Premiere version do I need?</summary><p data-i18n="a1">Adobe Premiere Pro 2020 or newer. It installs as a panel under Window, then Extensions.</p></details>
+    <details><summary data-i18n="q2">Does it work in DaVinci Resolve?</summary><p data-i18n="a2">Premiere Pro today. DaVinci support is on the roadmap for Auto Multicam, Silence Cut, and Final Check. Mic Bleed stays Premiere only, because DaVinci handles track audio differently.</p></details>
+    <details><summary data-i18n="q3">Do I need a mic for each speaker?</summary><p data-i18n="a3">For multicam, yes. Cutmarker decides who is on camera by listening to each mic, so one mic per speaker gives the cleanest result.</p></details>
+    <details><summary data-i18n="q4">Is my footage uploaded anywhere?</summary><p data-i18n="a4">Never. Your media and editing stay on your computer. No uploads, no per-minute fees, no monthly limits.</p></details>
+    <details><summary data-i18n="q9">Do I need an internet connection?</summary><p data-i18n="a9">Your media and the editing stay on your computer, nothing is uploaded. You do need a connection to activate and verify your license, the same as most paid editing software. The editing itself runs locally.</p></details>
+    <details><summary data-i18n="q8">Do I need Mic Bleed if my mixer already has automix?</summary><p data-i18n="a8">Even when your mixer or recorder reduces bleed while you record, that pass is not always perfect. You can still run Mic Bleed in post to fine-tune it further, with keyframes you control, whenever you want a cleaner result.</p></details>
+    <details><summary data-i18n="q5">What does Insights actually track?</summary><p data-i18n="a5">Only your work inside Premiere: editing time and actions on the timeline, as an orientational guide. It does not watch anything you do outside the app, and nothing leaves your computer.</p></details>
+    <details><summary data-i18n="q6">How many devices does one license cover?</summary><p data-i18n="a6">One device per license. Changing computers? Just reach out to us and we will move your license to the new machine.</p></details>
+    <details><summary data-i18n="q7">Can I cancel anytime?</summary><p data-i18n="a7">Yes. It is a monthly subscription with no lock-in, cancel whenever you want. The 14-day trial is free, and you are not charged if you cancel before it ends.</p></details>
+  </div>
+</div></section>
+
+<div class="line"></div>
+<section id="about"><div class="wrap">
+  <div class="head"><span class="kicker" data-i18n="aboutKicker">Who's behind it</span><h2 data-i18n="aboutH2">Built by an editor, for editors.</h2></div>
+  <div class="aboutbody">
+    <p data-i18n="aboutP1">I've edited hundreds of podcasts and TV productions. After thousands of hours in Premiere, I realized most editing time isn't spent making creative decisions. It's spent repeating the same mechanical tasks over and over.</p>
+    <p data-i18n="aboutP2">Cutmarker was built to eliminate those tasks.</p>
+    <p data-i18n="aboutP3">Every feature starts with a real production problem. If it doesn't save meaningful time or reduce mistakes, it doesn't get built.</p>
+    <p data-i18n="aboutP4">Today Cutmarker is developed by a growing team, with one goal: let editors spend more time editing and less time clicking. And when you need help, you reach the people who actually built it, not a ticket queue.</p>
+    <p class="sign" data-i18n="aboutSign">Martin Götzl, Founder</p>
+  </div>
+</div></section>
+
+<div class="line"></div>
+<section class="end"><div class="wrap">
+  <h2 data-i18n="endH2">Save hours on every episode.</h2>
+  <a class="btn" href="#waitlist">Join the waiting list</a>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="top">
+    <a class="logo" href="#"><svg class="lmark"><use href="#mark"/></svg> Cutmarker</a>
+    <div class="col"><h4 data-i18n="footProduct">Product</h4><a href="#tools" data-i18n="navTools">Tools</a><a href="#pricing" data-i18n="navPricing">Pricing</a><a href="#about" data-i18n="footAbout">About</a><a href="#faq" data-i18n="navFaq">FAQ</a></div>
+    <div class="col"><h4 data-i18n="footMore">More</h4><a href="roadmap.html" data-i18n="navRoadmap">Roadmap</a><a href="https://cutmarker.lemonsqueezy.com/affiliates">Affiliate</a><a href="https://discord.gg/GQ3xsVfTMP">Discord</a><a href="https://www.linkedin.com/company/cutmarker" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/cutmarkercom" target="_blank" rel="noopener">X</a></div>
+    <div class="col"><h4 data-i18n="footLegal">Legal</h4><a href="legal.html#terms" data-i18n="footTerms">Terms &amp; Conditions</a><a href="legal.html#eula" data-i18n="footEula">EULA</a><a href="legal.html#privacy" data-i18n="footPrivacy">Privacy</a><a href="https://cutmarker.lemonsqueezy.com/billing" data-i18n="footManage">Manage subscription</a></div>
+  </div>
+  <div class="bottom"><span>© 2026 Cutmarker.com. All rights reserved.</span><span data-i18n="footTagline">An Autopod alternative for Premiere Pro.</span></div>
+</div></footer>
+
+<script>
+  var I18N = { cs: {
+    navTools:"Nástroje", navPricing:"Ceník", navFaq:"FAQ", navRoadmap:"Roadmapa", navTrial:"Vyzkoušet zdarma",
+    heroH1:"Sestříhej svůj video podcast, celé u tebe v počítači.",
+    heroLead:"Přepínej kamery podle toho, kdo mluví, vystřihni ticho a vyčisti přeslechy mikrofonů, které ostatní podcast nástroje neřeší. Všechno přímo v Premiere Pro. Nic neopustí tvůj počítač, žádné limity minut.",
+    heroNote:"Alternativa k Autopodu, postavená jako plugin do Adobe Premiere Pro.",
+    bdg1:"Běží v Premiere Pro", bdg2:"Nic neopustí tvůj počítač", bdg3:"Žádné limity minut", bdg4:"14denní zkušební verze zdarma",
+    edgeSoon:"Brzy", soonLabel:"Ve vývoji",
+    q8:"Potřebuju Mic Bleed, když už má pult automix?",
+    a8:"I když ti pult nebo rekordér potlačí přeslech už při nahrávání, není to vždycky stoprocentní. Mic Bleed můžeš pustit i v postu a doladit ho dál, s keyframy pod tvou kontrolou, kdykoli chceš čistší výsledek.",
+    ctaTrial:"Spustit 14denní zkušební verzi",
+    toolsKicker:"Sada nástrojů",
+    toolsH2:"Všechny nástroje, jeden plugin.",
+    tMulticamDesc:"Přepíná záběry kamer podle toho, kdo mluví, s chytrým časováním, které neřeže na každé „mhm“.",
+    edgeOur:"Náš trumf",
+    tMicDesc:"Potlačí přeslechy mezi mikrofony a zapíše editovatelné keyframy, které máš pod kontrolou. Žádná černá skříňka.",
+    tSilenceDesc:"Najde hluchá místa a označí je, vystřihne nebo ztlumí. Tvoje volba. Nejdřív zazálohuje.",
+    edgeNew:"Novinka",
+    tFinalDesc:"Připravujeme: projede hotový střih a najde clipping, ticho, černé mezery a omylem ušoupnuté mikrostřihy, ať exportuješ s jistotou.",
+    tInsightsDesc:"Orientační pohled na to, kam ti mizí čas ve střihu: střih, koukání a pauzy, zaznamenané po pracovních blocích s reálnými časy. Čísla ber jako vodítko, ne stopky. Export do CSV. Běží lokálně.",
+    davinciSoon:"DaVinci ve vývoji",
+    edgeRoadmap:"Roadmapa",
+    roadmapH3:"Další na cestě",
+    roadmapDesc:"Stavíme další nástroje. Mrkni, co je na řadě, a hlasuj, co vydáme.",
+    roadmapVote:"Hlasuj v roadmapě →",
+    priceKicker:"Ceník", priceH2:"Jeden plán. Všechno v ceně.",
+    pricePt:"Všechny nástroje, jedna jednoduchá cena.",
+    perMonth:" / měsíc",
+    pl1:"Auto Multicam: přepíná podle toho, kdo mluví",
+    pl2:"Mic Bleed: editovatelné keyframy pod tvou kontrolou",
+    pl3:"Silence Cut: označit, vystřihnout nebo ztlumit",
+    pl4:"Final Check (připravujeme): ověř střih před exportem",
+    pl5:"Insights (beta): uvidíš, kam ti mizí čas ve střihu",
+    pn1:"Běží 100% lokálně, žádné uploady, žádné limity",
+    pn2:"Nejdřív zálohuje, plně nedestruktivní",
+    pn3:"Každý nový nástroj a update v ceně, jak je vydáváme",
+    pn4:"14denní zkušební verze zdarma, zrušíš kdykoli",
+    priceYr:"nebo $189 ročně (2 měsíce zdarma)",
+    affKicker:"Pro testery",
+    affH3:"Doporuč a vydělávej napořád.",
+    affDesc:"Sdílej Cutmarker a vydělávej 10% opakovanou provizi napořád za každého, koho přivedeš.",
+    affBtn:"Přidat se do programu",
+    bugH3:"Najdi bug, měsíc máš zdarma.",
+    bugDesc:"Najdeš reálný, zopakovatelný bug v ostré verzi (ne v betě)? Dej nám vědět a další měsíc je na nás.",
+    bugBtn:"Nahlásit bug",
+    faqKicker:"FAQ", faqH2:"Dobré otázky.",
+    q1:"Jakou verzi Premiere potřebuju?",
+    a1:"Adobe Premiere Pro 2020 nebo novější. Instaluje se jako panel v menu Okna → Rozšíření.",
+    q2:"Funguje to v DaVinci Resolve?",
+    a2:"Zatím Premiere Pro. DaVinci je na roadmapě pro Auto Multicam, Silence Cut a Final Check. Mic Bleed zůstává jen pro Premiere, protože DaVinci pracuje se zvukem stop jinak.",
+    q3:"Potřebuju mikrofon pro každého mluvčího?",
+    a3:"Pro multicam ano. Cutmarker pozná, kdo je na kameře, podle poslechu jednotlivých mikrofonů, takže jeden mikrofon na mluvčího dá nejčistší výsledek.",
+    q4:"Nahrává se moje video někam ven?",
+    a4:"Nikdy. Tvoje média i střih zůstávají v počítači. Žádné uploady, žádné poplatky za minutu, žádné měsíční limity.",
+    q9:"Potřebuju připojení k internetu?",
+    a9:"Tvoje média i střih zůstávají v počítači, nic se nenahrává. Připojení potřebuješ k aktivaci a ověření licence, stejně jako většina placených editačních programů. Samotný střih běží lokálně.",
+    q5:"Co přesně Insights sleduje?",
+    a5:"Jen tvoji práci uvnitř Premiere: čas střihu a akce na timeline, jako orientační vodítko. Nesleduje nic, co děláš mimo aplikaci, a nic neopouští tvůj počítač.",
+    q6:"Na kolik zařízení platí jedna licence?",
+    a6:"Jedno zařízení na licenci. Měníš počítač? Napiš nám a licenci ti přehodíme na nový stroj.",
+    q7:"Můžu kdykoli zrušit?",
+    a7:"Ano. Je to měsíční předplatné bez závazku, zrušíš kdykoli. 14denní zkušební verze je zdarma a pokud zrušíš před koncem, nic neplatíš.",
+    aboutKicker:"Kdo za tím stojí",
+    aboutH2:"Od střihače pro střihače.",
+    aboutP1:"Jsem podcastový producent. Sám jsem natočil stovky podcastů a taky je stříhal, takže jsem si celý ten proces prošel od začátku do konce a vím z první ruky, které věci střihače trápí nejvíc.",
+    aboutP2:"Zároveň tvořím podcasty s největšími tvůrci v Česku, jejichž obsah má dohromady miliony zhlédnutí. Tam si naplno uvědomíš tu zodpovědnost, když má něco vyjít ven, i ten tichý strach v hlavě: je všechno opravdu v pořádku?",
+    aboutP3:"Chtěl jsem proto vytvořit něco, co dělá dvě věci: sundá ti z talíře tu otravnou práci a dá ti klid, že výsledek je v pořádku. Druhé oči, které kontrolu odpracují za tebe.",
+    aboutP4:"Proto vznikl Cutmarker. Podobné funkce jsem na trhu postrádal, a ty, co se blížily, nedělaly přesně to, co jsem potřeboval. Všechno v něm vychází přímo z praxe a teď za ním stojí tým, který ho neustále posouvá dál, aby pokrýval víc a víc práce.",
+    aboutSign:"Martin Götzl, Founder",
+    endH2:"Odevzdej svůj podcast s klidem.",
+    footProduct:"Produkt", footMore:"Více", footAbout:"O autorovi",
+    footLegal:"Právní", footTerms:"Obchodní podmínky", footEula:"Licence (EULA)", footPrivacy:"Ochrana údajů", footManage:"Správa předplatného",
+    footTagline:"Alternativa k Autopodu pro Premiere Pro."
+  }};
+  var EN_TITLE = document.title;
+  var CS_TITLE = "Cutmarker · Sestříhej svůj video podcast v Premiere Pro";
+  var LANG = 'en';
+  function pickDefault(){
+    try{ var s=localStorage.getItem('cm_lang'); if(s==='cs'||s==='en') return s; }catch(e){}
+    var h=(location.hostname||'').toLowerCase();
+    if(/\.cz$|\.sk$/.test(h)) return 'cs';
+    return 'en';
+  }
+  function snapEn(){ var ns=document.querySelectorAll('[data-i18n]'); for(var i=0;i<ns.length;i++){ ns[i].setAttribute('data-en', ns[i].innerHTML); } }
+  function applyLang(){
+    var ns=document.querySelectorAll('[data-i18n]');
+    for(var i=0;i<ns.length;i++){ var k=ns[i].getAttribute('data-i18n'); var t=I18N.cs[k]; ns[i].innerHTML=(LANG==='cs'&&t!=null)?t:(ns[i].getAttribute('data-en')||ns[i].innerHTML); }
+    document.documentElement.lang=LANG;
+    document.title=(LANG==='cs'?CS_TITLE:EN_TITLE);
+    var b=document.getElementById('langBtn'); if(b) b.textContent=(LANG==='en'?'CZ':'EN');
+  }
+  (function(){
+    snapEn();
+    LANG='en'; // launch: jen EN, čeština skrytá. Pro zapnutí CZ vrátit: LANG=pickDefault();
+    applyLang();
+    var b=document.getElementById('langBtn');
+    if(b) b.addEventListener('click', function(){ LANG=(LANG==='en'?'cs':'en'); try{ localStorage.setItem('cm_lang', LANG); }catch(e){} applyLang(); });
+  })();
+</script>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!reduce){
+    var els=document.querySelectorAll('#tools .head,.tool,#pricing .head,.price,#about .head,.aboutbody,.aff,#faq .head,#faq details,.end');
+    els.forEach(function(e){e.classList.add('reveal');});
+    function stagger(sel,step){var i=0;document.querySelectorAll(sel).forEach(function(e){e.style.transitionDelay=(i*step)+'ms';i++;});}
+    stagger('#tools .tool',45);stagger('#faq details',35);
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('is-in');io.unobserve(en.target)}})},{threshold:0,rootMargin:'0px 0px -4% 0px'});
+    els.forEach(function(e){io.observe(e)});
+    var amt=document.querySelector('.price .amt');
+    if(amt&&amt.firstChild){var io2=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){var t0=null;amt.firstChild.nodeValue='$0';(function st(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/700);amt.firstChild.nodeValue='$'+Math.round(p*19);if(p<1)requestAnimationFrame(st);})(performance.now());io2.unobserve(en.target);}});},{threshold:.6});io2.observe(amt);}
+    document.querySelectorAll('.tool').forEach(function(c){
+      c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect();c.style.transition='transform .06s linear,box-shadow .24s ease,border-color .24s ease';c.style.transform='perspective(900px) rotateX('+(((e.clientY-r.top)/r.height-.5)*-4).toFixed(2)+'deg) rotateY('+(((e.clientX-r.left)/r.width-.5)*4).toFixed(2)+'deg) translateY(-3px)';});
+      c.addEventListener('mouseleave',function(){c.style.transition='transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .24s ease,border-color .24s ease';c.style.transform='';});
+    });
+  }
+  var sc=document.getElementById('scrub');
+  if(sc){var pf=sc.querySelector('.pf'),ph=sc.querySelector('.ph'),PAD=72;
+    var kfs=[].slice.call(document.querySelectorAll('section[id]')).filter(function(s){return s.querySelector('.kicker');}).map(function(s){var a=document.createElement('a');a.className='kf';a.href='#'+s.id;sc.appendChild(a);return{el:a,sec:s,pos:0};});
+    function place(){var h=document.documentElement,max=h.scrollHeight-h.clientHeight;kfs.forEach(function(k){var off=k.sec.getBoundingClientRect().top+(window.pageYOffset||h.scrollTop);k.pos=max>0?Math.min(1,Math.max(0,(off-PAD)/max)):0;k.el.style.left=(k.pos*100).toFixed(2)+'%';var kc=k.sec.querySelector('.kicker');if(kc){var t=kc.textContent.replace(/^\d\d:\d\d/,'').trim();k.el.title=t;k.el.setAttribute('aria-label',t);}});}
+    function upd(){var h=document.documentElement,max=h.scrollHeight-h.clientHeight,p=max>0?h.scrollTop/max:0;pf.style.width=(p*100).toFixed(2)+'%';ph.style.left=(p*100).toFixed(2)+'%';kfs.forEach(function(k){k.el.classList.toggle('on',p>=k.pos-0.002);});}
+    addEventListener('scroll',upd,{passive:true});addEventListener('resize',function(){place();upd();});addEventListener('load',function(){place();upd();});
+    place();upd();window.__scrubReplace=function(){place();upd();};}
+  var wt=document.querySelector('#bgwave .wt');
+  if(wt){var N=150,hs=[];for(var i=0;i<N;i++){hs.push(0.12+0.88*Math.min(1,Math.abs(Math.sin(i*0.37)+0.6*Math.sin(i*0.13)+0.25*Math.sin(i*0.71))));}var W=1600,H=400,mid=H/2,step=W/N;function unit(){var s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8BE9B0"/><stop offset="1" stop-color="#6B5BFF"/></linearGradient></defs>';for(var j=0;j<N;j++){var bh=hs[j]*H*0.92,x=j*step+step*0.28,rw=step*0.44,y=mid-bh/2;s+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+rw.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="3" fill="url(#wg)"/>';}return s+'</svg>';}wt.innerHTML=unit()+unit();}
+  function decorate(){
+    var kk=document.querySelectorAll('.kicker'),tt=12;
+    kk.forEach(function(k,i){
+      var old=k.querySelector('.tc'); if(old&&old.parentNode) old.parentNode.removeChild(old);
+      var mm=Math.floor(tt/60),ss=tt%60,b=document.createElement('b');b.className='tc';b.textContent=(mm<10?'0'+mm:mm)+':'+(ss<10?'0'+ss:ss);k.insertBefore(b,k.firstChild);
+      var nx=k.nextElementSibling;
+      if(k.parentNode&&k.parentNode.classList&&k.parentNode.classList.contains('head')&&!(nx&&nx.classList&&nx.classList.contains('hruler'))){var hr=document.createElement('div');hr.className='hruler';k.parentNode.insertBefore(hr,k.nextSibling);}
+      tt+=48+i*26;
+    });
+  }
+  decorate(); if(window.__scrubReplace) window.__scrubReplace();
+  var lb=document.getElementById('langBtn'); if(lb) lb.addEventListener('click', function(){decorate();if(window.__scrubReplace)setTimeout(window.__scrubReplace,50);});
+})();
+</script>
+<script>
+(function(){
+  var SB_URL='https://uzxigeujwbaoyyvogewr.supabase.co';
+  var SB_KEY='sb_publishable_61hJTCt3tx4OBE4Xbv_WJg_-nL88XPb';
+  var f=document.getElementById('waitlist'), msg=document.getElementById('wlMsg');
+  var priv=document.getElementById('wlPriv'), done=document.getElementById('wlDone'), doneTxt=document.getElementById('wlDoneTxt');
+  if(!f||!msg) return;
+  function showDone(t){ if(doneTxt) doneTxt.textContent=t; f.style.display='none'; if(priv) priv.style.display='none'; msg.className='wl-msg'; msg.textContent=''; if(done) done.style.display='flex'; }
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var email=(f.email.value||'').trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ msg.className='wl-msg err'; msg.textContent='Please enter a valid email.'; return; }
+    var btn=f.querySelector('button'); var old=btn.textContent; btn.disabled=true; btn.textContent='...'; msg.className='wl-msg'; msg.textContent='';
+    fetch(SB_URL+'/rest/v1/signups', {
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({email:email, feature:'waitlist'})
+    }).then(function(r){
+      if(r.ok){ showDone("You're on the list. We'll be in touch before launch."); }
+      else if(r.status===409){ showDone("You're already on the list."); }
+      else { return r.text().then(function(t){ throw new Error(t||r.status); }); }
+    }).catch(function(){ msg.className='wl-msg err'; msg.textContent='Something went wrong, please try again.'; btn.disabled=false; btn.textContent=old; });
+  });
+})();
+</script>
 </body>
 </html>

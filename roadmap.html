@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cutmarker · Roadmap</title>
+<meta name="description" content="Vote on what we build next in Cutmarker for Premiere Pro, and get an email when a feature ships.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0C0C11; --surface:#15151c; --surface2:#191921;
+    --bd:rgba(255,255,255,.08); --bd2:rgba(255,255,255,.14);
+    --tx:#ECECEF; --tx2:#A7AEC2; --tx3:#6E7591;
+    --pur:#6B5BFF; --pur2:#a99cff; --purd:#5a4be0; --grey:#9098A9; --green:#8BE9B0; --signal:#8BE9B0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
+  #bgwave{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;opacity:.08}
+  #bgwave .wt{position:absolute;top:50%;left:0;display:flex;width:200%;height:44vh;transform:translateY(-50%);animation:drift 64s linear infinite;will-change:transform}
+  #bgwave .wt svg{width:50%;height:100%;display:block;flex:none}
+  @keyframes drift{from{transform:translate(0,-50%)}to{transform:translate(-50%,-50%)}}
+  @media(prefers-reduced-motion:reduce){#bgwave .wt{animation:none}}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  .btn{display:inline-block;background:linear-gradient(180deg,#7c6dff,#6B5BFF);color:#fff;font-weight:600;padding:11px 20px;border-radius:10px;font-size:15px;border:1px solid #7c6dff;box-shadow:0 1px 0 rgba(255,255,255,.14) inset,0 8px 24px rgba(107,91,255,.35);transition:transform .14s,box-shadow .14s,filter .14s;cursor:pointer}
+  .btn:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 12px 30px rgba(107,91,255,.5)}
+  .btn.sm{padding:8px 15px;font-size:14px}
+  h1,h2,h3{font-family:'Archivo',-apple-system,sans-serif}
+  h1{font-size:clamp(30px,4.0vw,42px);line-height:1.08;letter-spacing:-.02em;font-weight:800;font-stretch:112%}
+  h2{font-size:clamp(21px,2.6vw,28px);line-height:1.14;letter-spacing:-.02em;font-weight:800;font-stretch:112%}
+  h3{font-size:17px;font-weight:700;letter-spacing:-.01em;font-stretch:108%}
+  .kicker{color:var(--tx3);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;font-weight:500;display:inline-flex;align-items:center;gap:9px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.16em}
+  .kicker::before{content:"";width:7px;height:7px;border-radius:1px;transform:rotate(45deg);background:var(--signal);box-shadow:0 0 8px rgba(139,233,176,.5)}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(11,11,13,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{display:inline-flex;align-items:baseline;gap:.28em;font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:900;font-size:17px;letter-spacing:-.02em}
+  .logo .lmark{height:.72em;width:auto;aspect-ratio:86/46;flex:none;align-self:baseline}
+  nav .links{display:flex;gap:26px;align-items:center}
+  nav .links a{color:var(--tx2);font-size:14.5px;font-weight:500;transition:.15s}
+  nav .links a:hover{color:var(--tx)}
+  nav .links a.btn{color:#fff}
+  nav .links a:not(.disc):not(.btn){font-family:'Archivo',sans-serif;font-stretch:106%;font-weight:600;font-size:14px;letter-spacing:-.005em}
+  .langbtn{background:transparent;border:1px solid var(--bd2);color:var(--tx2);font-size:13px;font-weight:600;padding:5px 10px;border-radius:7px;cursor:pointer;font-family:inherit;transition:.15s}
+  .langbtn:hover{color:var(--tx);border-color:var(--tx3)}
+  @media(max-width:760px){nav .links a:not(.btn){display:none}}
+  .disc{display:inline-flex;align-items:center;gap:8px;background:#5865F2;color:#fff;font-weight:600;font-size:14px;padding:8px 14px;border-radius:9px;border:none;cursor:pointer;transition:.15s}
+  .disc:hover{background:#4853d6}
+
+  header.head{padding:40px 0 20px;text-align:center}
+  header.head .lead{color:var(--tx2);font-size:17px;max-width:540px;margin:18px auto 0}
+
+  .board{padding:14px 0 6px}
+  .card{display:flex;gap:14px;background:var(--surface);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:8px;transition:.15s}
+  .card:hover{border-color:var(--bd2)}
+  .vote{flex:none;display:flex;flex-direction:row;align-items:center;gap:6px;align-self:flex-start;background:var(--surface2);border:1px solid var(--bd2);border-radius:8px;color:var(--tx2);cursor:pointer;padding:6px 11px;transition:.15s}
+  .vote:hover{border-color:var(--pur);color:var(--tx)}
+  .vote.voted{background:rgba(107,91,255,.14);border-color:var(--pur);color:var(--pur2);cursor:default}
+  .vote .arr{font-size:11px;line-height:1}
+  .vote .n{font-size:14px;font-weight:700;color:var(--tx);margin-top:0}
+  .vote.voted .n{color:var(--pur2)}
+  .cbody{flex:1;min-width:0}
+  .crow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .st{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:5px;margin-right:7px;color:var(--tx2);background:rgba(154,162,180,.10);vertical-align:1px}
+  .st-prog{color:#7fc7e6;background:rgba(70,177,214,.13)}
+  .st-plan{color:var(--pur2);background:rgba(107,91,255,.13)}
+  .cbody h3{font-size:15px;margin-bottom:3px}
+  .cbody p{color:var(--tx2);font-size:13px;line-height:1.45}
+  .nbtn{flex:none;background:transparent;border:1px solid var(--bd2);color:var(--tx2);font-size:12px;font-weight:500;padding:5px 11px;border-radius:7px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .nbtn:hover{border-color:var(--tx3);color:var(--tx)}
+  .nform{display:none;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  .nform.on{display:flex}
+  .nform input{background:var(--surface2);border:1px solid var(--bd2);color:var(--tx);border-radius:8px;padding:9px 12px;font-size:14px;flex:1;min-width:180px}
+  .nform input:focus{outline:none;border-color:var(--pur)}
+  .done{color:var(--green);font-size:14px;font-weight:600;margin-top:13px}
+
+  .shipped{border-top:1px solid var(--bd);margin-top:22px;padding:26px 0 6px}
+  .shipped h2{margin-bottom:6px}
+  .shipped .sub{color:var(--tx2);font-size:14px;margin-bottom:18px}
+  .ship{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--bd);color:var(--tx2);font-size:14.5px}
+  .ship:first-of-type{border-top:1px solid var(--bd)}
+  .ship .ok{color:var(--green);font-weight:700}
+  .ship .new{margin-left:8px;color:var(--pur2);font-size:11px;font-weight:600;border:1px solid rgba(107,91,255,.4);padding:1px 7px;border-radius:5px}
+  .ship .pf{margin-left:auto;color:var(--tx3);font-size:12px}
+
+  .band{background:var(--surface2);border:1px solid var(--bd);border-radius:16px;padding:24px;text-align:center;margin:26px 0}
+  .band h2{margin-bottom:8px}
+  .band p{color:var(--tx2);font-size:14.5px;margin:0 auto 20px;max-width:460px}
+
+  footer{border-top:1px solid var(--bd);padding:40px 0 34px;color:var(--tx2);font-size:14px}
+  footer .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:28px;margin-bottom:26px}
+  footer .col h4{color:var(--tx);font-size:13px;margin-bottom:12px;font-weight:600}
+  footer .col a{display:block;color:var(--tx2);padding:4px 0;transition:color .18s ease,transform .18s ease}
+  footer .col a:hover{color:var(--tx);transform:translateX(3px)}
+  footer .bottom{border-top:1px solid var(--bd);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--tx3)}
+  @media(max-width:560px){.vote{padding:5px 9px}}
+</style>
+</head>
+<body>
+<div id="bgwave" aria-hidden="true"><div class="wt"></div></div>
+<svg width="0" height="0" style="position:absolute"><symbol id="mark" viewBox="-43 -46 86 46"><mask id="ntch"><rect x="-58" y="-56" width="116" height="60" fill="#fff"/><circle cx="0" cy="-26" r="12" fill="#000"/></mask><g mask="url(#ntch)"><rect x="9" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/><rect x="-17" y="-46" width="8" height="46" rx="4" fill="#DDE1EC"/><rect x="22" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/><rect x="-30" y="-34" width="8" height="34" rx="4" fill="#A7AEC2"/><rect x="35" y="-22" width="8" height="22" rx="4" fill="#6E7591"/><rect x="-43" y="-22" width="8" height="22" rx="4" fill="#6E7591"/></g><rect x="-3.5" y="-22" width="7" height="22" rx="3.5" fill="#6B5BFF"/><circle cx="0" cy="-26" r="7.5" fill="#6B5BFF"/></symbol></svg>
+
+<nav><div class="wrap">
+  <a class="logo" href="index.html"><svg class="lmark"><use href="#mark"/></svg> Cutmarker</a>
+  <div class="links">
+    <a href="index.html#tools" data-i18n="navTools">Tools</a>
+    <a href="index.html#pricing" data-i18n="navPricing">Pricing</a>
+    <a href="index.html#faq" data-i18n="navFaq">FAQ</a>
+    <!-- Jazykový přepínač skrytý pro launch (čeština se doplní později). Zapnout = odebrat hidden + vrátit LANG=pickLang() níže. -->
+    <button id="langBtn" class="langbtn" hidden>CZ</button>
+    <a class="btn sm" href="index.html#pricing">Start free trial</a>
+  </div>
+</div></nav>
+
+<header class="head"><div class="wrap">
+  <h1 data-i18n="h1">Vote for what we build next.</h1>
+  <p class="lead" data-i18n="lead">Drop your email on any item to hear when it ships.</p>
+</div></header>
+
+<div class="wrap">
+  <div class="board" id="board"></div>
+
+  <div class="shipped">
+    <h2 data-i18n="shippedH2">Already shipped</h2>
+    <div class="sub" data-i18n="shippedSub">In your plan today, included as we keep building.</div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipMulticam">Auto Multicam: switch angles by who is speaking</span> <span class="pf">Premiere</span></div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipMic">Mic Bleed: duck cross-talk with editable keyframes</span> <span class="pf">Premiere</span></div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipSilence">Silence Cut: mark, ripple or disable dead air</span> <span class="pf">Premiere</span></div>
+    <div class="ship"><span class="ok">✓</span> <span data-i18n="shipInsights">Insights: track where your editing time goes, per session</span> <span class="new" data-i18n="shipNew">New</span><span class="pf">Premiere</span></div>
+  </div>
+
+  <div class="band">
+    <h2 data-i18n="bandH2">Want a feature sooner?</h2>
+    <p data-i18n="bandP">Join the Discord to request features, get early builds, and hear first when something ships.</p>
+    <a class="disc" href="#" id="discBand" style="margin:0 auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M20 4a18 18 0 0 0-4.5-1.4l-.2.4A16 16 0 0 1 19 5a17 17 0 0 0-14 0 16 16 0 0 1 3.7-1.9l-.2-.5A18 18 0 0 0 4 4 18 18 0 0 0 1 18a18 18 0 0 0 5.5 2.8l.4-.6a12 12 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11 0l.5.4c-.6.4-1.2.7-1.9.9l.4.6A18 18 0 0 0 23 18 18 18 0 0 0 20 4ZM8.5 15a1.7 1.7 0 0 1 0-3.4A1.7 1.7 0 0 1 10 13.3 1.7 1.7 0 0 1 8.5 15Zm7 0a1.7 1.7 0 0 1 0-3.4 1.7 1.7 0 0 1 1.5 1.7A1.7 1.7 0 0 1 15.5 15Z"/></svg> <span data-i18n="bandBtn">Join our Discord</span></a>
+  </div>
+</div>
+
+<footer><div class="wrap">
+  <div class="top">
+    <a class="logo" href="index.html"><svg class="lmark"><use href="#mark"/></svg> Cutmarker</a>
+    <div class="col"><h4>Product</h4><a href="index.html#tools" data-i18n="navTools">Tools</a><a href="index.html#pricing" data-i18n="navPricing">Pricing</a><a href="index.html#about">About</a><a href="index.html#faq" data-i18n="navFaq">FAQ</a></div>
+    <div class="col"><h4>More</h4><a href="roadmap.html" data-i18n="navRoadmap">Roadmap</a><a href="https://cutmarker.lemonsqueezy.com/affiliates">Affiliate</a><a href="#" id="discFoot">Discord</a></div>
+    <div class="col"><h4>Legal</h4><a href="legal.html#terms" data-i18n="footTerms">Terms &amp; Conditions</a><a href="legal.html#eula" data-i18n="footEula">EULA</a><a href="legal.html#privacy" data-i18n="footPrivacy">Privacy</a><a href="https://cutmarker.lemonsqueezy.com/billing">Manage subscription</a></div>
+  </div>
+  <div class="bottom"><span>© 2026 Cutmarker.com. All rights reserved.</span><span>An Autopod alternative for Premiere Pro.</span></div>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  var SB = null; try{ SB = supabase.createClient("https://uzxigeujwbaoyyvogewr.supabase.co","sb_publishable_61hJTCt3tx4OBE4Xbv_WJg_-nL88XPb"); }catch(e){}
+  var DISCORD_INVITE = "https://discord.gg/GQ3xsVfTMP"; // ← sem dej skutečný Discord invite link
+
+  // ---- i18n ----
+  var I18N = { cs:{
+    navTools:"Nástroje", navPricing:"Ceník", navFaq:"FAQ",
+    kicker:"Roadmapa",
+    h1:"Hlasuj, co postavíme příště.",
+    lead:"Nech u kterékoli položky e-mail a dáme ti vědět, až to vyjde.",
+    shippedH2:"Už hotové",
+    shippedSub:"Už teď v tvém plánu, přidáváme dál.",
+    shipMulticam:"Auto Multicam: přepínání záběrů podle toho, kdo mluví",
+    shipMic:"Mic Bleed: potlačení přeslechů s editovatelnými keyframy",
+    shipSilence:"Silence Cut: označit, ripple nebo ztlumit hluché místo",
+    shipFinal:"Final Check: odchytí clipping, ticho, černé mezery a mikrostřihy před exportem",
+    shipInsights:"Insights: sleduj, kam ti ve střihu mizí čas, po blocích",
+    shipNew:"Novinka",
+    bandH2:"Chceš funkci dřív?",
+    bandP:"Přidej se na Discord: navrhuj funkce, ber early buildy a slyš první, až něco vyjde.",
+    bandBtn:"Přidej se na Discord",
+    footBack:"Zpět na web",
+    footTerms:"Obchodní podmínky", footEula:"Licence (EULA)", footPrivacy:"Ochrana údajů",
+    footTail:"Hlasy a přihlášky ukládáme do vlastní databáze. Napíšeme ti jen ohledně funkce, kterou sis vybral."
+  }};
+  var EN_TITLE = "Cutmarker · Roadmap", CS_TITLE = "Cutmarker · Roadmapa";
+  var LANG = 'en';
+  function T(cs_,en_){ return LANG==='cs'?cs_:en_; }
+  function pickLang(){ try{ var s=localStorage.getItem('cm_lang'); if(s==='cs'||s==='en') return s; }catch(e){} var h=(location.hostname||'').toLowerCase(); return /\.cz$|\.sk$/.test(h)?'cs':'en'; }
+  function snapEn(){ var ns=document.querySelectorAll('[data-i18n]'); for(var i=0;i<ns.length;i++) ns[i].setAttribute('data-en', ns[i].innerHTML); }
+  function applyLang(){
+    var ns=document.querySelectorAll('[data-i18n]');
+    for(var i=0;i<ns.length;i++){ var k=ns[i].getAttribute('data-i18n'); var t=I18N.cs[k]; ns[i].innerHTML=(LANG==='cs'&&t!=null)?t:(ns[i].getAttribute('data-en')||ns[i].innerHTML); }
+    document.documentElement.lang=LANG;
+    document.title=(LANG==='cs'?CS_TITLE:EN_TITLE);
+    var b=document.getElementById('langBtn'); if(b) b.textContent=(LANG==='en'?'CZ':'EN');
+    render();
+  }
+
+  // ---- features (t/d = EN, tcs/dcs = CZ) ----
+  var FEATS=[
+    {slug:"finalcheck",t:"Final Check",d:"Catch clipping, dead air, black gaps and micro-cuts before export.",tcs:"Final Check",dcs:"Odchyť clipping, ticho, černé mezery a mikrostřihy před exportem.",cat:"Final Check",status:"In progress",open:false,seed:47,votes:47},
+    {slug:"davinci",t:"DaVinci Resolve support",d:"Cutmarker for Resolve editors.",tcs:"Podpora DaVinci Resolve",dcs:"Cutmarker pro střihače v Resolve.",cat:"Platforms",status:"Planned",open:false,seed:39,votes:39},
+    {slug:"finalcut",t:"Final Cut Pro support",d:"Vote if Final Cut is your editor.",tcs:"Podpora Final Cut Pro",dcs:"Hlasuj, jestli střiháš ve Final Cutu.",cat:"Platforms",status:"Considering",open:false,seed:13,votes:13},
+    {slug:"audio-more",t:"More audio cleanup",d:"Cleaner dialogue with less manual work.",tcs:"Víc čištění zvuku",dcs:"Čistší dialog s míň ruční práce.",cat:"Audio",status:"Considering",open:false,seed:22,votes:22},
+    {slug:"fc-more",t:"More pre-export checks",d:"Catch more problems before you hit export.",tcs:"Víc kontrol před exportem",dcs:"Odchyť víc problémů, než dáš export.",cat:"Final Check",status:"Planned",open:false,seed:28,votes:28},
+    {slug:"ingest",t:"Faster ingest & sync",d:"Reach a ready-to-edit timeline sooner.",tcs:"Rychlejší ingest a sync",dcs:"Dřív hotová timeline ke střihu.",cat:"Workflow",status:"Considering",open:false,seed:16,votes:16},
+    {slug:"text",t:"Captions & text tools",d:"Subtitles and text cleanup, done right.",tcs:"Titulky a textové nástroje",dcs:"Titulky a čištění textu pořádně.",cat:"Text",status:"Considering",open:false,seed:12,votes:12},
+    {slug:"delivery",t:"Export & delivery helpers",d:"Less babysitting around export.",tcs:"Export a doručení",dcs:"Míň hlídání kolem exportu.",cat:"Workflow",status:"Considering",open:false,seed:9,votes:9}
+  ];
+  var STCLASS={"In progress":"st-prog","Planned":"st-plan","Considering":""};
+  function statusLabel(s){ if(LANG!=='cs') return s; return ({"Planned":"Plánujeme","Considering":"Zvažujeme","In progress":"Pracujeme"})[s]||s; }
+
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function voterId(){var v=localStorage.getItem("cm_voter");if(!v){v=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("v"+Math.random().toString(36).slice(2)+Date.now());localStorage.setItem("cm_voter",v);}return v;}
+  function votedSet(){try{return new Set(JSON.parse(localStorage.getItem("cm_voted")||"[]"));}catch(e){return new Set();}}
+  function markVoted(slug){var s=votedSet();s.add(slug);localStorage.setItem("cm_voted",JSON.stringify(Array.from(s)));}
+
+  function render(){
+    var vs=votedSet();
+    var board=document.getElementById("board"); board.innerHTML="";
+    var notify=T("Upozornit mě","Notify me");
+    FEATS.forEach(function(f){
+      var voted=vs.has(f.slug);
+      var title=(LANG==='cs'&&f.tcs)?f.tcs:f.t;
+      var desc=(LANG==='cs'&&f.dcs)?f.dcs:f.d;
+      var card=document.createElement("div"); card.className="card";
+      card.innerHTML='<button class="vote'+(voted?" voted":"")+'" onclick="vote(this,\''+f.slug+'\')"><span class="arr">▲</span><span class="n">'+(f.votes||0)+'</span></button>'+
+        '<div class="cbody">'+
+        '<div class="crow"><h3>'+esc(title)+'</h3><button class="nbtn" onclick="toggleNotify(this)" '+(f.open?'style="display:none"':'')+'>'+notify+'</button></div>'+
+        '<p><span class="st '+(STCLASS[f.status]||"")+'">'+statusLabel(f.status)+'</span>'+esc(desc)+'</p>'+
+        '<form class="nform '+(f.open?'on':'')+'" onsubmit="return subscribe(this,\''+f.slug+'\')"><input type="email" placeholder="your@email.com" required><button class="btn sm" type="submit">'+notify+'</button></form>'+
+        '</div>';
+      board.appendChild(card);
+    });
+  }
+
+  async function vote(b,slug){
+    if(b.classList.contains("voted")) return;
+    if(!SB){ alert(T("Hlasování je teď nedostupné.","Voting is unavailable right now.")); return; }
+    var n=b.querySelector(".n");
+    var res=await SB.from("votes").insert({feature:slug,voter:voterId()});
+    if(!res.error){ b.classList.add("voted"); n.textContent=(+n.textContent)+1; markVoted(slug); }
+    else if(res.error.code==="23505"){ b.classList.add("voted"); markVoted(slug); }
+    else { alert(T("Hlas se nepodařilo uložit: ","Could not save your vote: ")+res.error.message); }
+  }
+  function toggleNotify(b){ b.style.display="none"; b.parentNode.parentNode.querySelector(".nform").classList.add("on"); }
+  async function subscribe(f,slug){
+    var inp=f.querySelector("input"); var email=(inp.value||"").trim(); if(!email) return false;
+    if(!SB){ alert(T("Přihlášení je teď nedostupné.","Sign-up is unavailable right now.")); return false; }
+    var res=await SB.from("signups").insert({email:email,feature:slug});
+    if(res.error && res.error.code!=="23505"){ alert(T("Přihlášení selhalo: ","Sign-up failed: ")+res.error.message); return false; }
+    var d=document.createElement("div"); d.className="done"; d.textContent=T("✓ Jsi na seznamu, ohledně téhle funkce ti napíšeme.","✓ You're on the list, we'll email you about this feature.");
+    f.parentNode.replaceChild(d,f); return false;
+  }
+
+  var _dt=document.getElementById("discTop"); if(_dt)_dt.href=DISCORD_INVITE;
+  document.getElementById("discBand").href=DISCORD_INVITE;
+  var _df=document.getElementById("discFoot"); if(_df)_df.href=DISCORD_INVITE;
+  document.getElementById("langBtn").addEventListener("click", function(){ LANG=(LANG==='en'?'cs':'en'); try{ localStorage.setItem('cm_lang', LANG); }catch(e){} applyLang(); });
+
+  async function loadCounts(){
+    if(SB){ try{ var res=await SB.rpc("feature_vote_counts"); if(res.data){ var m={}; res.data.forEach(function(r){m[r.feature]=r.votes;}); FEATS.forEach(function(f){ f.votes=(m[f.slug]||0)+(f.seed||0); }); } }catch(e){} }
+    render();
+  }
+
+  snapEn();
+  LANG='en'; // launch: jen EN, čeština skrytá. Pro zapnutí CZ vrátit: LANG=pickLang();
+  applyLang();   // sets language + renders board
+  loadCounts();  // fetch vote counts, re-render
+</script>
+<script>(function(){var wt=document.querySelector('#bgwave .wt');if(!wt)return;var N=150,hs=[];for(var i=0;i<N;i++){hs.push(0.12+0.88*Math.min(1,Math.abs(Math.sin(i*0.37)+0.6*Math.sin(i*0.13)+0.25*Math.sin(i*0.71))));}var W=1600,H=400,mid=H/2,step=W/N;function unit(){var s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><defs><linearGradient id="wg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8BE9B0"/><stop offset="1" stop-color="#6B5BFF"/></linearGradient></defs>';for(var j=0;j<N;j++){var bh=hs[j]*H*0.92,x=j*step+step*0.28,rw=step*0.44,y=mid-bh/2;s+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+rw.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="3" fill="url(#wg2)"/>';}return s+'</svg>';}wt.innerHTML=unit()+unit();})();</script>
+</body>
+</html>
